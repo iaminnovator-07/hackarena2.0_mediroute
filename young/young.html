@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="description" content="TeenPulse by MediRoute – Your personal health XP tracker for teens.">
+<title>TeenPulse · MediRoute</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════════ */
+:root {
+  --bg-deep:    #080612;
+  --bg-mid:     #0f0a1e;
+  --bg-surface: rgba(255,255,255,0.07);
+  --glass:      rgba(255,255,255,0.10);
+  --glass-border: rgba(255,255,255,0.18);
+  --glass-border-strong: rgba(255,255,255,0.32);
+
+  --purple:   #7c3aed;
+  --indigo:   #4f46e5;
+  --blue:     #3b82f6;
+  --cyan:     #06b6d4;
+  --pink:     #ec4899;
+  --amber:    #f59e0b;
+  --green:    #22c55e;
+  --red:      #ef4444;
+
+  --grad-hero:   linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #3b82f6 100%);
+  --grad-cyan:   linear-gradient(135deg, #06b6d4, #6366f1);
+  --grad-fire:   linear-gradient(135deg, #f59e0b, #ef4444);
+  --grad-green:  linear-gradient(135deg, #10b981, #059669);
+
+  --text:    #f0edff;
+  --muted:   #a5b4fc;
+  --dimmed:  rgba(255,255,255,0.45);
+
+  --radius-sm:   10px;
+  --radius-md:   16px;
+  --radius-lg:   22px;
+  --radius-xl:   28px;
+  --radius-full: 9999px;
+
+  --nav-h: 68px;
+  --header-h: 60px;
+  --font: 'Outfit', -apple-system, sans-serif;
+}
+
+/* ══════════════════════════════════════════
+   RESET
+══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font);
+  background: var(--bg-deep);
+  color: var(--text);
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  -webkit-font-smoothing: antialiased;
+}
+button { font-family: inherit; cursor: pointer; border: none; outline: none; background: none; }
+input, textarea { font-family: inherit; outline: none; }
+img { max-width: 100%; display: block; }
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 99px; }
+
+/* ══════════════════════════════════════════
+   APP SHELL — mobile first (fills screen)
+   On desktop, shows as centred phone frame
+══════════════════════════════════════════ */
+#app {
+  width: 100%;
+  height: 100dvh;
+  background: radial-gradient(ellipse at 70% -10%, #1e1b4b 0%, var(--bg-deep) 55%),
+              radial-gradient(ellipse at 10% 90%, #0e0824 0%, transparent 60%);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+@media (min-width: 480px) {
+  body { align-items: center; }
+  #app {
+    max-width: 430px;
+    height: 100vh;
+    box-shadow: 0 0 120px rgba(99,102,241,0.25), 0 0 0 1px rgba(255,255,255,0.06);
+    border-radius: 0;
+  }
+}
+
+/* ══════════════════════════════════════════
+   TOP HEADER BAR
+══════════════════════════════════════════ */
+.top-bar {
+  flex-shrink: 0;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  background: rgba(8,6,18,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  z-index: 50;
+  position: relative;
+}
+.top-bar-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.top-bar-sub {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--muted);
+}
+.top-bar-title {
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: -0.4px;
+  background: var(--grad-hero);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.top-bar-actions { display: flex; gap: 10px; align-items: center; }
+.icon-btn {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.icon-btn:active { transform: scale(0.88); background: rgba(255,255,255,0.15); }
+.avatar {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--grad-hero);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 900;
+  border: 2px solid rgba(255,255,255,0.25);
+  cursor: pointer;
+}
+
+/* ══════════════════════════════════════════
+   SCROLLABLE CONTENT AREA
+══════════════════════════════════════════ */
+.scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: calc(var(--nav-h) + 16px);
+}
+.screen {
+  display: none;
+  padding-bottom: 10px;
+}
+.screen.active {
+  display: block;
+}
+
+/* ══════════════════════════════════════════
+   HERO HEADER (XP + Level)
+══════════════════════════════════════════ */
+.hero {
+  background: var(--grad-hero);
+  padding: 22px 18px 28px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: -60px; right: -60px;
+  width: 220px; height: 220px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute; bottom: -40px; left: -30px;
+  width: 140px; height: 140px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.hero-greeting { font-size: 13px; font-weight: 600; opacity: 0.88; margin-bottom: 3px; }
+.hero-name { font-size: 24px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 16px; }
+
+/* Level / XP card inside hero */
+.xp-card {
+  background: rgba(255,255,255,0.14);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.28);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
+}
+.xp-lvl { font-size: 30px; font-weight: 900; line-height: 1; }
+.xp-info { flex: 1; }
+.xp-info-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.xp-bar { height: 9px; background: rgba(255,255,255,0.22); border-radius: 99px; overflow: hidden; }
+.xp-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #fef08a, #fde047, #f59e0b);
+  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.xp-streak {
+  text-align: center;
+  font-size: 11px;
+  color: rgba(255,255,255,0.8);
+  font-weight: 700;
+}
+.xp-streak span { display: block; font-size: 18px; font-weight: 900; color: #fde047; }
+
+/* Quick stat chips below hero */
+.hero-stats {
+  display: flex;
+  gap: 8px;
+  padding: 14px 18px 0;
+}
+.stat-chip {
+  flex: 1;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 12px 10px;
+  text-align: center;
+  animation: fadeUp 0.5s ease both;
+}
+.stat-chip .val { font-size: 18px; font-weight: 900; }
+.stat-chip .lbl { font-size: 10px; font-weight: 700; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.4px; }
+
+/* Horizontal section tab strip */
+.tab-strip {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 14px 18px 0;
+}
+.tab-strip::-webkit-scrollbar { display: none; }
+.tab-pill {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: var(--radius-full);
+  background: var(--glass);
+  border: 1.5px solid var(--glass-border);
+  color: rgba(255,255,255,0.8);
+  transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tab-pill:active, .tab-pill.active {
+  background: var(--grad-hero);
+  border-color: transparent;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* ══════════════════════════════════════════
+   SECTION HEADER
+══════════════════════════════════════════ */
+.sec-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 18px 12px;
+}
+.sec-hd h2 {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.sec-hd .see-all {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+/* ══════════════════════════════════════════
+   GLASS CARDS
+══════════════════════════════════════════ */
+.cards-col { display: flex; flex-direction: column; gap: 12px; padding: 0 18px; }
+.card {
+  background: linear-gradient(160deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.06) 100%);
+  border: 1.5px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp 0.55s ease both;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(255,255,255,0.2) 0%, transparent 40%),
+    radial-gradient(circle at 90% 90%, rgba(99,102,241,0.1) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+.card > * { position: relative; z-index: 1; }
+.card:active { transform: scale(0.985); }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.card-tag {
+  display: inline-block;
+  font-size: 10px; font-weight: 900;
+  text-transform: uppercase; letter-spacing: 0.8px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 10px;
+}
+.card-title {
+  font-size: 14.5px; font-weight: 800;
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 14px;
+}
+.card-title .ico { font-size: 20px; }
+
+/* Row utility */
+.row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.row span { color: rgba(255,255,255,0.8); font-weight: 500; }
+
+/* Progress bar */
+.pbar { height: 7px; background: rgba(255,255,255,0.1); border-radius: 99px; overflow: hidden; margin-top: 6px; }
+.pbar-fill {
+  height: 100%; border-radius: 99px;
+  background: var(--grad-cyan);
+  transition: width 0.9s cubic-bezier(0.16,1,0.3,1);
+}
+
+/* Pill badge */
+.badge-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px; font-weight: 700;
+  background: rgba(99,102,241,0.28);
+  color: #c7d2fe;
+  border: 1px solid rgba(99,102,241,0.4);
+}
+
+/* Muted text */
+.muted { color: var(--muted); font-size: 12px; font-weight: 500; }
+
+/* 3-col stat grid */
+.stat-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px; margin-top: 14px;
+}
+.stat-box {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-md);
+  padding: 12px 8px; text-align: center;
+}
+.stat-box .v { font-size: 18px; font-weight: 900; }
+.stat-box .l { font-size: 10px; font-weight: 700; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.3px; }
+
+/* ══════════════════════════════════════════
+   MOOD SELECTOR
+══════════════════════════════════════════ */
+.mood-row { display: flex; gap: 6px; margin-top: 10px; }
+.mood-btn {
+  flex: 1; padding: 10px 0; text-align: center;
+  font-size: 22px;
+  background: rgba(255,255,255,0.05);
+  border: 1.5px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+}
+.mood-btn:active, .mood-btn.active {
+  background: var(--grad-cyan);
+  border-color: transparent;
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 0 8px 20px rgba(6,182,212,0.35);
+}
+
+/* ══════════════════════════════════════════
+   WATER DROPS
+══════════════════════════════════════════ */
+.water-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.drop {
+  width: 38px; height: 38px;
+  border-radius: var(--radius-full);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid var(--glass-border);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.drop.filled {
+  background: linear-gradient(135deg, var(--cyan), var(--blue));
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(6,182,212,0.4);
+  transform: scale(1.05);
+}
+
+/* ══════════════════════════════════════════
+   CHALLENGE ITEMS
+══════════════════════════════════════════ */
+.challenge-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.challenge-item:active { background: rgba(255,255,255,0.1); }
+.challenge-ico {
+  width: 40px; height: 40px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.challenge-info { flex: 1; }
+.challenge-info strong { font-size: 13px; font-weight: 800; display: block; margin-bottom: 3px; }
+.challenge-bar { height: 4px; background: rgba(255,255,255,0.12); border-radius: 99px; overflow: hidden; }
+.challenge-fill { height: 100%; border-radius: 99px; background: var(--grad-cyan); }
+
+/* ══════════════════════════════════════════
+   AI CHAT
+══════════════════════════════════════════ */
+.chat-msgs {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  height: 150px;
+  overflow-y: auto;
+  display: flex; flex-direction: column; gap: 8px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  scrollbar-width: none;
+}
+.chat-msgs::-webkit-scrollbar { display: none; }
+.msg-ai {
+  background: rgba(99,102,241,0.2);
+  border: 1px solid rgba(99,102,241,0.3);
+  padding: 8px 12px;
+  border-radius: 12px 12px 12px 2px;
+  align-self: flex-start;
+  max-width: 88%;
+  line-height: 1.45;
+}
+.msg-user {
+  background: var(--grad-cyan);
+  padding: 8px 12px;
+  border-radius: 12px 12px 2px 12px;
+  align-self: flex-end;
+  max-width: 88%;
+  line-height: 1.45;
+}
+.chat-row {
+  display: flex; gap: 8px;
+}
+.chat-row input {
+  flex: 1;
+  background: rgba(255,255,255,0.07);
+  border: 1.5px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  color: var(--text); font-size: 13px;
+  transition: border-color 0.2s;
+}
+.chat-row input:focus { border-color: rgba(99,102,241,0.7); }
+
+/* ══════════════════════════════════════════
+   BADGES GRID
+══════════════════════════════════════════ */
+.badges-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 10px; margin-top: 4px;
+}
+.badge-item {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 700; color: var(--dimmed);
+  text-align: center;
+}
+.badge-ic {
+  width: 52px; height: 52px;
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid var(--glass-border);
+  transition: all 0.2s;
+}
+.badge-item.unlocked .badge-ic {
+  background: var(--grad-hero);
+  border-color: transparent;
+  box-shadow: 0 6px 16px rgba(99,102,241,0.4);
+}
+.badge-item.unlocked { color: var(--text); }
+
+/* ══════════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════════ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 800;
+  color: #fff;
+  background: var(--grad-cyan);
+  box-shadow: 0 4px 14px rgba(6,182,212,0.3);
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+}
+.btn:active { transform: scale(0.94); box-shadow: none; }
+.btn-sm { padding: 7px 14px; font-size: 12px; }
+.btn-hero {
+  background: var(--grad-hero);
+  box-shadow: 0 4px 16px rgba(99,102,241,0.4);
+}
+
+/* Toggle switch */
+.toggle {
+  width: 44px; height: 24px;
+  background: rgba(255,255,255,0.14);
+  border-radius: var(--radius-full);
+  position: relative; cursor: pointer;
+  transition: background 0.22s;
+  flex-shrink: 0;
+}
+.toggle::after {
+  content: ''; position: absolute;
+  top: 3px; left: 3px;
+  width: 18px; height: 18px;
+  background: #fff; border-radius: 50%;
+  transition: left 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.toggle.on { background: var(--grad-cyan); }
+.toggle.on::after { left: 23px; }
+
+/* Journal textarea */
+.journal-area {
+  width: 100%;
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 0.2s;
+}
+.journal-area:focus { border-color: rgba(99,102,241,0.7); }
+
+/* Pomodoro display */
+.pomo-display {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.pomo-time {
+  font-size: 38px; font-weight: 900; letter-spacing: -1px;
+  background: var(--grad-cyan);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.pomo-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 4px; }
+
+/* ══════════════════════════════════════════
+   RIPPLE CLICK EFFECT
+══════════════════════════════════════════ */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  transform: scale(0);
+  animation: rippleAnim 0.55s linear;
+  pointer-events: none;
+  z-index: 999;
+}
+@keyframes rippleAnim {
+  to { transform: scale(4); opacity: 0; }
+}
+
+/* ══════════════════════════════════════════
+   XP FLOAT ANIMATION
+══════════════════════════════════════════ */
+.xp-float {
+  position: fixed;
+  font-size: 15px; font-weight: 900;
+  color: #fde047;
+  pointer-events: none; z-index: 999;
+  text-shadow: 0 0 8px rgba(253,224,71,0.8);
+  animation: floatUp 0.8s ease forwards;
+}
+@keyframes floatUp {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(-60px) scale(1.3); }
+}
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+.toast {
+  position: fixed;
+  bottom: calc(var(--nav-h) + 14px);
+  left: 50%; transform: translateX(-50%) translateY(30px);
+  background: rgba(30,27,75,0.96);
+  border: 1.5px solid rgba(99,102,241,0.5);
+  backdrop-filter: blur(16px);
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  font-size: 13px; font-weight: 700;
+  color: var(--text);
+  z-index: 900;
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ══════════════════════════════════════════
+   BOTTOM NAVIGATION
+══════════════════════════════════════════ */
+.bottom-nav {
+  position: absolute;
+  bottom: 0; left: 0; width: 100%;
+  height: var(--nav-h);
+  background: rgba(8,6,18,0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: space-around;
+  padding: 0 4px 10px;
+  z-index: 100;
+}
+.nav-btn {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 6px 0;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative;
+}
+.nav-btn:active { transform: scale(0.88); }
+.nav-btn .ni { font-size: 20px; line-height: 1; filter: grayscale(1) opacity(0.55); transition: all 0.22s; }
+.nav-btn .nl { font-size: 9.5px; font-weight: 700; color: rgba(255,255,255,0.38); transition: color 0.22s; }
+.nav-btn.active .ni { filter: none; transform: translateY(-2px) scale(1.15); }
+.nav-btn.active .nl { color: #a5b4fc; font-weight: 800; }
+.nav-btn.active::before {
+  content: '';
+  position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+  width: 22px; height: 2.5px;
+  background: var(--grad-hero);
+  border-radius: 0 0 4px 4px;
+}
+
+/* ══════════════════════════════════════════
+   SECTION DIVIDER
+══════════════════════════════════════════ */
+.divider { height: 1px; background: rgba(255,255,255,0.06); margin: 4px 18px; }
+
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ── TOP BAR ── -->
+  <div class="top-bar">
+    <div class="top-bar-brand">
+      <span class="top-bar-sub">MediRoute</span>
+      <span class="top-bar-title">TeenPulse ⚡</span>
+    </div>
+    <div class="top-bar-actions">
+      <div class="icon-btn" onclick="showToast('🔔 No new alerts')">🔔</div>
+      <div class="avatar">AR</div>
+    </div>
+  </div>
+
+  <!-- ── SCROLLABLE CONTENT ── -->
+  <div class="scroll-area" id="scrollArea">
+    <section class="screen active" id="screen-xp">
+      <!-- HERO: Level + XP -->
+      <div class="hero">
+      <div class="hero-greeting">Friday, Jun 12 · Let's crush it today 🚀</div>
+      <div class="hero-name">Hey Aryan! 👋</div>
+      <div class="xp-card">
+        <div>
+          <div class="xp-lvl">🔥 12</div>
+          <div class="xp-streak"><span id="streakNum">14</span>day streak</div>
+        </div>
+        <div class="xp-info">
+          <div class="xp-info-top">
+            <span id="xpText">1240 XP</span>
+            <span style="color:#fde047;">62% to Lv13</span>
+          </div>
+          <div class="xp-bar"><div class="xp-bar-fill" id="xpFill" style="width:62%"></div></div>
+          <div class="muted" style="margin-top:5px;">760 XP until Level 13</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stats Row -->
+    <div class="hero-stats">
+      <div class="stat-chip" style="animation-delay:0.05s">
+        <div class="val">+180</div>
+        <div class="lbl">Today XP</div>
+      </div>
+      <div class="stat-chip" style="animation-delay:0.1s">
+        <div class="val">#7</div>
+        <div class="lbl">Class Rank</div>
+      </div>
+      <div class="stat-chip" style="animation-delay:0.15s">
+        <div class="val">8.4K</div>
+        <div class="lbl">Steps</div>
+      </div>
+      <div class="stat-chip" style="animation-delay:0.2s">
+        <div class="val">82%</div>
+        <div class="lbl">Sleep</div>
+      </div>
+    </div>
+
+    <!-- Tab strip -->
+    <div class="tab-strip" id="tabStrip">
+      <div class="tab-pill active">⚡ XP</div>
+      <div class="tab-pill">😊 Mood</div>
+      <div class="tab-pill">📚 Study</div>
+      <div class="tab-pill">😴 Sleep</div>
+      <div class="tab-pill">🏃 Fitness</div>
+      <div class="tab-pill">💧 Hydration</div>
+      <div class="tab-pill">📱 Digital</div>
+      <div class="tab-pill">🎯 Challenges</div>
+      <div class="tab-pill">🤖 AI Coach</div>
+      <div class="tab-pill">📓 Journal</div>
+      <div class="tab-pill">🏅 Badges</div>
+    </div>
+
+    <!-- ────────────────────────────────────
+         MOOD CHECK
+    ──────────────────────────────────────── -->
+    <div class="sec-hd">
+      <h2><span class="ico">😊</span> Daily Mood Check</h2>
+      <span class="see-all" onclick="gainXP(10); showToast('😊 Mood logged! +10 XP')">Log it</span>
+    </div>
+    <div class="cards-col">
+      <div class="card" style="animation-delay:0.1s">
+        <div class="card-tag">Mood</div>
+        <div class="muted" style="margin-bottom:10px;">How are you feeling today, Aryan?</div>
+        <div class="mood-row">
+          <div class="mood-btn" onclick="selectMood(this,'😄')">😄</div>
+          <div class="mood-btn" onclick="selectMood(this,'🙂')">🙂</div>
+          <div class="mood-btn active" onclick="selectMood(this,'😐')">😐</div>
+          <div class="mood-btn" onclick="selectMood(this,'😔')">😔</div>
+          <div class="mood-btn" onclick="selectMood(this,'😡')">😡</div>
+        </div>
+        <div class="muted" style="margin-top:12px;">7-day: 🙂 🙂 😄 😐 😄 🙂 😐 · Mostly positive!</div>
+      </div>
+    </div>
+
+    <!-- ────────────────────────────────────
+         STUDY / POMODORO
+    ──────────────────────────────────────── -->
+    <div class="sec-hd">
+      <h2><span class="ico">📚</span> Study Hub</h2>
+      <span class="see-all">History</span>
+    </div>
+    <div class="cards-col">
+      <div class="card" style="animation-delay:0.12s">
+        <div class="card-tag">Focus</div>
+        <div class="pomo-display">
+          <div class="pomo-time" id="pomoTime">25:00</div>
+          <div class="pomo-label" id="pomoLabel">Pomodoro Ready</div>
+        </div>
+        <div class="row"><span>Focus time today</span><span class="badge-pill">2h 15m</span></div>
+        <div class="pbar"><div class="pbar-fill" style="width:75%"></div></div>
+        <div class="muted" style="margin-top:8px; margin-bottom:14px;">Pomodoro sessions: <strong style="color:#fff;">3 / 5</strong> · Break reminders taken: ✅ 3</div>
+        <button class="btn btn-hero" id="pomoBtn" onclick="togglePomodoro()" style="width:100%">
+          ▶ Start Focus Session ⏱️
+        </button>
+      </div>
+    </div>
+
+    </section>
+    <section class="screen" id="screen-fitness">
+    <!-- ────────────────────────────────────
+         FITNESS + SLEEP (2-col feel on wide)
+    ──────────────────────────────────────── -->
+    <div class="sec-hd">
+      <h2><span class="ico">🏃</span> Fitness & Sleep</h2>
+    </div>
+    <div class="cards-col">
+      <div class="card" style="animation-delay:0.14s">
+        <div class="card-tag">Fitness</div>
+        <div class="card-title"><span class="ico">🏃</span> Today's Activity</div>
+        <div class="stat-grid">
+          <div class="stat-box"><div class="v">8,420</div><div class="l">Steps</div></div>
+          <div class="stat-box"><div class="v">320</div><div class="l">Active Min</div></div>
+          <div class="stat-box"><div class="v">410</div><div class="l">Calories</div></div>
+        </div>
+        <div class="row" style="margin-top:14px;"><span>Goal (10,000 steps)</span><span>84%</span></div>
+        <div class="pbar"><div class="pbar-fill" style="width:84%; background:linear-gradient(90deg,#10b981,#06b6d4)"></div></div>
+        <div class="muted" style="margin-top:8px;">🏀 Basketball practice logged · 1h</div>
+      </div>
+
+      <div class="card" style="animation-delay:0.16s">
+        <div class="card-tag">Sleep</div>
+        <div class="card-title"><span class="ico">😴</span> Sleep Tracker</div>
+        <div class="row"><span>Last night</span><span class="badge-pill">7h 20m</span></div>
+        <div class="pbar"><div class="pbar-fill" style="width:88%; background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div></div>
+        <div class="stat-grid" style="margin-top:14px;">
+          <div class="stat-box"><div class="v">82%</div><div class="l">Score</div></div>
+          <div class="stat-box"><div class="v">5</div><div class="l">Good Nights</div></div>
+          <div class="stat-box"><div class="v">11:30</div><div class="l">Goal</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ────────────────────────────────────
+         HYDRATION
+    ──────────────────────────────────────── -->
+    <div class="sec-hd">
+      <h2><span class="ico">💧</span> Hydration</h2>
+      <span class="see-all" id="waterCount">5 / 8 glasses</span>
+    </div>
+    <div class="cards-col">
+      <div class="card" style="animation-delay:0.18s">
+        <div class="card-tag">Hydration</div>
+        <div class="row"><span>Today's intake</span><span class="badge-pill">1.25L / 2L</span></div>
+        <div class="water-row" id="waterRow">
+          <div class="drop filled" onclick="tapDrop(this)">💧</div>
+          <div class="drop filled" onclick="tapDrop(this)">💧</div>
+          <div class="drop filled" onclick="tapDrop(this)">💧</div>
+          <div class="drop filled" onclick="tapDrop(this)">💧</div>
+          <div class="drop filled" onclick="tapDrop(this)">💧</div>
+          <div class="drop" onclick="tapDrop(this)">💧</div>
+          <div class="drop" onclick="tapDrop(this)">💧</div>
+          <div class="drop" onclick="tapDrop(this)">💧</div>
+        </div>
+        <button class="btn" style="margin-top:14px; width:100%;" onclick="addWaterGlass()">+ Log a Glass &nbsp;💧</button>
+      </div>
+    </div>
+
+    <!-- ────────────────────────────────────
+         DIGITAL WELLNESS
+    ──────────────────────────────────────── -->
+    <div class="sec-hd">
+      <h2><span class="ico">📱</span> Digital Wellness</h2>
+    </div>
+    <div class="cards-col">
+      <div class="card" style="animation-delay:0.19s">
+        <div class="card-tag">Screen Time</div>
+        <div class="row"><span>Screen time today</span><span class="badge-pill" style="background:rgba(239,68,68,0.2); color:#fca5a5; border-color:rgba(239,68,68,0.35);">4h 12m</span></div>
+        <div class="pbar"><div class="pbar-fill" style="width:60%; background:linear-gradient(90deg,#f59e0b,#ef4444)"></div></div>
+        <div style="margin-top:14px; display:flex; flex-direction:column; gap:10px;">
+          <div class="row">
+            <span>📲 Wind-down mode (9PM)</span>
+            <div class="toggle on" id="t1" onclick="toggleSwitch('t1')"></div>
+          </div>
+          <div class="row">
+            <span>🔕 Focus mode while studying</span>
+            <div class="toggle" id="t2" onclick="toggleSwitch('t2')"></div>
+          </div>
+          <div class="row">
+            <span>🎮 Gaming limit (2h/day)</span>
+            <div class="toggle on" id="t3" onclick="toggleSwitch('t3')"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ────────────────────────────────────
+         CHALLENGES
+    ──────────────────────────────────────── -->
+    <div class="sec-hd">
+      <h2><span class="ico">🎯</span> Health Challenges</h2>
+      <span class="see-all">All</span>
+    </div>
+    <div class="cards-col">
+      <div class="card" style="animation-delay:0.2s">
+        <div class="card-tag">Active Quests</div>
+        <div class="challenge-item" onclick="completeChallenge(this, 150)">
+          <div class="challenge-ico" style="background:rgba(6,182,212,0.15);">💧</div>
+          <div class="challenge-info">
+            <strong>7-Day Hydration Streak</strong>
+            <div class="muted" style="margin-bottom:5px;">5 of 7 days complete</div>
+            <div class="challenge-bar"><div class="challenge-fill" style="width:71%"></div></div>
+          </div>
+          <span class="badge-pill">+150 XP</span>
+        </div>
+        <div class="challenge-item" onclick="completeChallenge(this, 200)">
+          <div class="challenge-ico" style="background:rgba(16,185,129,0.15);">🏃</div>
+          <div class="challenge-info">
+            <strong>10K Steps Squad</strong>
+            <div class="muted" style="margin-bottom:5px;">3 of 5 days complete</div>
+            <div class="challenge-bar"><div class="challenge-fill" style="width:60%"></div></div>
+          </div>
+          <span class="badge-pill">+200 XP</span>
+        </div>
+        <div class="challenge-item" onclick="completeChallenge(this, 100)">
+          <div class="challenge-ico" style="background:rgba(124,58,237,0.15);">🌙</div>
+          <div class="challenge-info">
+            <strong>No Phone Before Bed</strong>
+            <div class="muted" style="margin-bottom:5px;">2 of 7 days complete</div>
+            <div class="challenge-bar"><div class="challenge-fill" style="width:28%"></div></div>
+          </div>
+          <span class="badge-pill">+100 XP</span>
+        </div>
+      </div>
+    </div>
+    </section>
+
+    <section class="screen" id="screen-ai">
+    <!-- ────────────────────────────────────
+         AI COACH CHAT
+    ──────────────────────────────────────── -->
+    <div class="sec-hd">
+      <h2><span class="ico">🤖</span> Teen AI Coach</h2>
+    </div>
+    <div class="cards-col">
+      <div class="card" style="animation-delay:0.22s">
+        <div class="card-tag">AI Coach</div>
+        <div class="chat-msgs" id="chatBox">
+          <div class="msg-ai">Hey Aryan! You're 760 XP away from Level 13 🔥 Want a quick study break tip?</div>
+          <div class="msg-user">Yeah sure!</div>
+          <div class="msg-ai">Try the 20-20-20 rule: every 20 mins, look at something 20ft away for 20 secs. Great for eye health 👀</div>
+        </div>
+        <!-- Quick suggestions -->
+        <div style="display:flex; gap:6px; margin-bottom:10px; overflow-x:auto; scrollbar-width:none;">
+          <div class="tab-pill" onclick="quickChat('Sleep tips')" style="font-size:11px; padding:5px 11px;">😴 Sleep tips</div>
+          <div class="tab-pill" onclick="quickChat('Stress relief')" style="font-size:11px; padding:5px 11px;">💙 Stress</div>
+          <div class="tab-pill" onclick="quickChat('Boost XP')" style="font-size:11px; padding:5px 11px;">⚡ Boost XP</div>
+        </div>
+        <div class="chat-row">
+          <input type="text" id="chatInput" placeholder="Ask your coach anything..." onkeypress="if(event.key==='Enter') sendChat()">
+          <button class="btn btn-sm" onclick="sendChat()">Send</button>
+        </div>
+      </div>
+    </div>
+    </section>
+
+    <section class="screen" id="screen-profile">
+    <!-- ────────────────────────────────────
+         PROFILE
+    ──────────────────────────────────────── -->
+    <div class="sec-hd">
+      <h2><span class="ico">👤</span> Profi</h2>
+      <span class="see-all">Edit</span>
+    </div>
+    <div class="cards-col">
+      <div class="card" style="animation-delay:0.24s">
+        <div class="card-tag">Profile</div>
+        <div class="row" style="margin-bottom:12px;">
+          <div>
+            <div style="font-size:16px; font-weight:800;">Aryan R.</div>
+            <div class="muted">16 years old · Grade 10</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:14px; font-weight:800;">School MVP</div>
+            <div class="muted">Striving for balance</div>
+          </div>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-box"><div class="v">1240</div><div class="l">XP</div></div>
+          <div class="stat-box"><div class="v">14</div><div class="l">Streak</div></div>
+          <div class="stat-box"><div class="v">82%</div><div class="l">Sleep</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-hd">
+      <h2><span class="ico">📓</span> Health Journal</h2>
+    </div>
+    <div class="cards-col">
+      <div class="card" style="animation-delay:0.24s">
+        <div class="card-tag">Journal</div>
+        <textarea class="journal-area" id="journalArea" placeholder="How was your day? Write down your thoughts, wins, or anything on your mind...">Today I finished my history project early and went for a run after school. Feeling pretty good about my progress this week! 🌱</textarea>
+        <button class="btn" style="margin-top:12px; width:100%;" onclick="saveJournal()">💾 Save Entry &nbsp;(+20 XP)</button>
+      </div>
+    </div>
+
+    <!-- ────────────────────────────────────
+         BADGES
+    ──────────────────────────────────────── -->
+    <div class="sec-hd">
+      <h2><span class="ico">🏅</span> Achievement Badges</h2>
+      <span class="see-all">4 / 8 unlocked</span>
+    </div>
+    <div class="cards-col" style="padding-bottom:8px;">
+      <div class="card" style="animation-delay:0.26s">
+        <div class="card-tag">Badges</div>
+        <div class="badges-grid">
+          <div class="badge-item unlocked"><div class="badge-ic">🔥</div>14-Day Streak</div>
+          <div class="badge-item unlocked"><div class="badge-ic">💧</div>Hydro Hero</div>
+          <div class="badge-item unlocked"><div class="badge-ic">📚</div>Focus Master</div>
+          <div class="badge-item unlocked"><div class="badge-ic">😴</div>Sleep Champ</div>
+          <div class="badge-item"><div class="badge-ic">🏃</div>10K x7</div>
+          <div class="badge-item"><div class="badge-ic">🧘</div>Zen Mind</div>
+          <div class="badge-item"><div class="badge-ic">🌟</div>Level 20</div>
+          <div class="badge-item"><div class="badge-ic">🤝</div>Squad Goals</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ────────────────────────────────────
+         EMERGENCY SAFETY
+    ──────────────────────────────────────── -->
+    <div class="sec-hd">
+      <h2><span class="ico">🆘</span> Emergency Safety</h2>
+      <span class="see-all" onclick="showToast('🆘 Emergency profile opened')">Edit</span>
+    </div>
+    <div class="cards-col" style="padding-bottom:20px;">
+      <div class="card" style="animation-delay:0.28s; border-color:rgba(239,68,68,0.35);">
+        <div class="card-tag" style="background:rgba(239,68,68,0.18); border-color:rgba(239,68,68,0.35); color:#fca5a5;">Safety</div>
+        <div class="card-title"><span class="ico">🆘</span> Emergency Medical ID</div>
+        <!-- Live Emergency QR Code -->
+        <div id="emergency-qr" style="background:#fff; width:130px; height:130px; border-radius:14px; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 24px rgba(0,0,0,0.35);">
+          <!-- QR code generated here -->
+        </div>
+        <div style="font-size:11px; color:#6b7280; text-align:center;">Scan to save contact instantly</div>
+        <div style="text-align:center; color:var(--muted); font-size:12px; font-weight:600; margin-bottom:14px;">Scan for emergency contacts, allergies &amp; blood group</div>
+        <!-- Info rows -->
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div class="row" style="background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); border-radius:var(--radius-md); padding:10px 14px; margin-bottom:0;">
+            <span style="font-weight:700; color:#fca5a5;">🩸 Blood Group</span>
+            <span style="font-weight:900; color:#ef4444;">B+</span>
+          </div>
+          <div class="row" style="background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.2); border-radius:var(--radius-md); padding:10px 14px; margin-bottom:0;">
+            <span style="font-weight:700; color:#fde047;">⚠️ Allergies</span>
+            <span style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.8);">Dust, Grass pollen</span>
+          </div>
+          <div class="row" style="background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.25); border-radius:var(--radius-md); padding:10px 14px; margin-bottom:0;">
+            <span style="font-weight:700; color:#a5b4fc;">💊 Current Meds</span>
+            <span style="font-size:11.5px; font-weight:700; color:rgba(255,255,255,0.8);">Inhaler PRN</span>
+          </div>
+        </div>
+        <button class="btn" style="margin-top:14px; width:100%; background:linear-gradient(135deg,#ef4444,#dc2626); box-shadow:0 4px 16px rgba(239,68,68,0.35);" onclick="showToast('🆘 Emergency profile editor opened')">
+          ✏️ Edit Medical ID
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /scroll-area -->
+
+  <!-- ── BOTTOM NAV ── -->
+  <nav class="bottom-nav">
+    <div class="nav-btn active" data-screen="screen-xp">
+      <div class="ni">⚡</div><div class="nl">XP</div>
+    </div>
+    <div class="nav-btn" data-screen="screen-fitness">
+      <div class="ni">🏃</div><div class="nl">Fitness</div>
+    </div>
+    <div class="nav-btn" data-screen="screen-ai">
+      <div class="ni">🤖</div><div class="nl">AI Coach</div>
+    </div>
+    <div class="nav-btn" data-screen="screen-profile">
+      <div class="ni">👤</div><div class="nl">Profi</div>
+    </div>
+  </nav>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+</div><!-- /app -->
+
+<script src="../mdei_html/caregiver/qrcode.js"></script>
+<script>
+/* ─── STATE ─── */
+let xp = 1240, xpGoal = 2000;
+let pomoInterval = null, pomoRemaining = 25 * 60;
+
+/* ─── LIVE DATE GREETING ─── */
+(function updateGreeting() {
+  const now = new Date();
+  const hour = now.getHours();
+  const greet = hour < 12 ? 'Good morning ☀️' : hour < 17 ? 'Good afternoon 🌤' : 'Good evening 🌙';
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const dateStr = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()} · Let's crush it today 🚀`;
+  const greetEl = document.querySelector('.hero-greeting');
+  if (greetEl) greetEl.textContent = dateStr;
+  // also update hero name greeting
+  const nameEl = document.querySelector('.hero-name');
+  if (nameEl) nameEl.textContent = `${greet.split(' ')[0] === 'Good' ? 'Hey Aryan! 👋' : 'Hey Aryan! 👋'}`;
+})();
+
+/* ─── RIPPLE ─── */
+document.addEventListener('click', function(e) {
+  const target = e.target.closest('.card, .mood-btn, .drop, .challenge-item, .btn, .tab-pill, .nav-btn, .badge-item');
+  if (!target) return;
+  const r = document.createElement('div');
+  r.className = 'ripple';
+  const rect = target.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  r.style.width  = size + 'px';
+  r.style.height = size + 'px';
+  r.style.left   = (e.clientX - rect.left - size / 2) + 'px';
+  r.style.top    = (e.clientY - rect.top  - size / 2) + 'px';
+  if (getComputedStyle(target).position === 'static') target.style.position = 'relative';
+  target.style.overflow = 'hidden';
+  target.appendChild(r);
+  setTimeout(() => r.remove(), 600);
+});
+
+/* ─── XP ─── */
+function gainXP(amount) {
+  xp = Math.min(xp + amount, xpGoal);
+  const pct = (xp / xpGoal * 100).toFixed(1);
+  document.getElementById('xpFill').style.width = pct + '%';
+  document.getElementById('xpText').textContent = xp + ' XP';
+
+  // Floating +XP label
+  const f = document.createElement('div');
+  f.className = 'xp-float';
+  f.textContent = '+' + amount + ' XP ⚡';
+  f.style.left  = (Math.random() * 160 + 100) + 'px';
+  f.style.top   = (Math.random() * 120 + 180) + 'px';
+  document.getElementById('app').appendChild(f);
+  setTimeout(() => f.remove(), 800);
+}
+
+/* ─── TOAST ─── */
+let _tt;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(_tt);
+  _tt = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ─── MOOD ─── */
+function selectMood(el, emoji) {
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  gainXP(10);
+  showToast('Mood logged ' + emoji + ' · +10 XP');
+}
+
+/* ─── POMODORO ─── */
+function togglePomodoro() {
+  const btn = document.getElementById('pomoBtn');
+  const display = document.getElementById('pomoTime');
+  const label = document.getElementById('pomoLabel');
+
+  if (pomoInterval) {
+    clearInterval(pomoInterval);
+    pomoInterval = null;
+    btn.textContent = '▶ Resume Focus ⏱️';
+    label.textContent = 'Session Paused';
+    showToast('⏸️ Session paused');
+  } else {
+    gainXP(25);
+    btn.textContent = '⏸ Pause Session';
+    label.textContent = 'Focus Mode Active 🎯';
+    showToast('🍅 Focus session started! +25 XP');
+
+    pomoInterval = setInterval(() => {
+      pomoRemaining--;
+      const m = Math.floor(pomoRemaining / 60);
+      const s = pomoRemaining % 60;
+      display.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+
+      if (pomoRemaining <= 0) {
+        clearInterval(pomoInterval);
+        pomoInterval = null;
+        pomoRemaining = 25 * 60;
+        display.textContent = '25:00';
+        btn.textContent = '▶ Start Focus Session ⏱️';
+        label.textContent = 'Session Complete! 🎉';
+        gainXP(100);
+        showToast('🏆 Session complete! +100 XP');
+      }
+    }, 1000);
+  }
+}
+
+/* ─── HYDRATION ─── */
+function tapDrop(el) {
+  const wasFilled = el.classList.contains('filled');
+  el.classList.toggle('filled');
+  const count = document.querySelectorAll('.drop.filled').length;
+  document.getElementById('waterCount').textContent = count + ' / 8 glasses';
+  if (!wasFilled) {
+    gainXP(5);
+    showToast('💧 +1 glass logged! +5 XP');
+  } else {
+    showToast('💧 Glass removed');
+  }
+}
+function addWaterGlass() {
+  const drops = document.querySelectorAll('.drop:not(.filled)');
+  if (drops.length) {
+    drops[0].classList.add('filled');
+    const count = document.querySelectorAll('.drop.filled').length;
+    document.getElementById('waterCount').textContent = count + ' / 8 glasses';
+    gainXP(5);
+    showToast('💧 Glass logged! +5 XP');
+  } else {
+    showToast('🎉 Daily hydration goal complete!');
+  }
+}
+
+/* ─── CHALLENGES ─── */
+function completeChallenge(el, xpAmt) {
+  gainXP(xpAmt);
+  showToast('✅ Progress logged! +' + xpAmt + ' XP');
+  el.style.opacity = '0.6';
+  el.style.pointerEvents = 'none';
+}
+
+/* ─── DIGITAL WELLNESS TOGGLES ─── */
+function toggleSwitch(id) {
+  const el = document.getElementById(id);
+  const on = el.classList.toggle('on');
+  showToast(on ? '✅ Mode enabled' : '⛔ Mode disabled');
+}
+
+/* ─── JOURNAL ─── */
+function saveJournal() {
+  gainXP(20);
+  showToast('📓 Journal entry saved! +20 XP');
+}
+
+/* ─── EMERGENCY QR CODE ─── */
+let emergencyQRCode = null;
+function getEmergencyVCard() {
+  const fullName = 'Aryan R.';
+  const phone = '+919876543210';
+  const email = 'aryan@example.com';
+  const bloodGroup = 'B+';
+  const allergies = 'Dust, Grass pollen';
+  const medications = 'Inhaler PRN';
+  const emergencyContact = 'Mom: +91 98765 43210';
+  const note = 'Emergency medical info via MediRoute';
+
+  return [
+    'BEGIN:VCARD',
+    'VERSION:3.0',
+    `FN:${fullName}`,
+    'N:R.;Aryan;;;',
+    'ORG:MediRoute;',
+    'TITLE:Emergency Contact',
+    `TEL;TYPE=CELL,VOICE:${phone}`,
+    `EMAIL:${email}`,
+    `NOTE:Blood Group: ${bloodGroup}; Allergies: ${allergies}; Medications: ${medications}; Emergency: ${emergencyContact}; ${note}`,
+    'END:VCARD'
+  ].join('\n');
+}
+function generateEmergencyQRCode() {
+  const target = document.getElementById('emergency-qr');
+  if (!target || typeof QRCode !== 'function') return;
+  target.innerHTML = '';
+  try {
+    if (emergencyQRCode && typeof emergencyQRCode.clear === 'function') {
+      emergencyQRCode.clear();
+    }
+  } catch (e) {
+    /* ignore */
+  }
+  const content = getEmergencyVCard();
+  emergencyQRCode = new QRCode(target, {
+    text: content,
+    width: target.clientWidth || 130,
+    height: target.clientHeight || 130,
+    colorDark: '#111111',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+}
+
+/* ─── TAB STRIP ─── */
+document.querySelectorAll('.tab-pill').forEach(pill => {
+  pill.addEventListener('click', function () {
+    document.querySelectorAll('.tab-pill').forEach(p => p.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+/* ─── BOTTOM NAV ─── */
+function goToScreen(screenId) {
+  document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+  const target = document.getElementById(screenId);
+  if (target) target.classList.add('active');
+  const scrollArea = document.getElementById('scrollArea');
+  if (scrollArea) scrollArea.scrollTop = 0;
+}
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', function () {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    const screenId = this.dataset.screen;
+    if (screenId) goToScreen(screenId);
+  });
+});
+
+/* ─── AI COACH CHAT ─── */
+function quickChat(text) {
+  document.getElementById('chatInput').value = text;
+  sendChat();
+}
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const box = document.getElementById('chatBox');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const um = document.createElement('div');
+  um.className = 'msg-user';
+  um.textContent = text;
+  box.appendChild(um);
+  input.value = '';
+  box.scrollTop = box.scrollHeight;
+
+  const q = text.toLowerCase();
+  setTimeout(() => {
+    const am = document.createElement('div');
+    am.className = 'msg-ai';
+    let reply = 'Got it! Small, consistent habits build big results 🌱';
+    if (q.includes('sleep'))   reply = 'Dim lights 30 mins before bed, no screens, maybe calm music 😴';
+    if (q.includes('stress') || q.includes('anxious')) reply = 'Box breathing: in 4s, hold 4s, out 6s. Repeat 3× 💙';
+    if (q.includes('water') || q.includes('hydra'))    reply = "You're at " + document.querySelectorAll('.drop.filled').length + "/8 glasses — keep going! 💧";
+    if (q.includes('xp') || q.includes('boost'))       reply = '⚡ Log your mood, a glass of water, and journal today — that\'s +35 XP instantly!';
+    am.textContent = reply;
+    box.appendChild(am);
+    box.scrollTop = box.scrollHeight;
+  }, 600);
+}
+
+/* ─── SCROLL TO CHAT ─── */
+function scrollToChat() {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const aiBtn = document.querySelector('.nav-btn[data-screen="screen-ai"]');
+  if (aiBtn) aiBtn.classList.add('active');
+  goToScreen('screen-ai');
+  const box = document.getElementById('chatBox');
+  if (box) {
+    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => document.getElementById('chatInput').focus(), 400);
+  }
+}
+
+generateEmergencyQRCode();
+</script>
+</body>
+</html>
