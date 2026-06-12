@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>MediRoute Elder Care Dashboard</title>
+  <style>
+    :root {
+      --bg: #F7F1EA;
+      --surface: #FFFFFF;
+      --surface-soft: #F8EFE8;
+      --text: #2E231B;
+      --text-muted: #7D6B60;
+      --primary: #D95F49;
+      --primary-soft: #F9D7CA;
+      --accent: #6FAF91;
+      --accent-soft: #DCEAE0;
+      --warning: #E5A154;
+      --danger: #D9645D;
+      --neutral: #C1B3A7;
+      --shadow: 0 20px 40px rgba(45, 33, 25, 0.12);
+      --radius: 28px;
+      --radius-sm: 16px;
+      --transition: 220ms ease;
+      --nav-height: 72px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #fff0ea, #f7f1ea 35%, #efe6dc 100%);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    #app {
+      max-width: 470px;
+      margin: 0 auto;
+      padding-bottom: calc(var(--nav-height) + 16px);
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(153, 127, 109, 0.16);
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .header-left {
+      display: grid;
+      gap: 4px;
+    }
+
+    .header-left span {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+    }
+
+    .header-left h1 {
+      margin: 0;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .icon-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 20px;
+      background: var(--accent-soft);
+      color: #2F6D52;
+      border: none;
+      font-weight: 700;
+      font-size: 0.92rem;
+      box-shadow: 0 10px 20px rgba(111, 175, 145, 0.16);
+      transition: transform var(--transition), background var(--transition);
+    }
+
+    .icon-button:hover {
+      transform: translateY(-1px);
+      background: rgba(220, 234, 224, 0.96);
+    }
+
+    .top-card {
+      margin: 16px 20px 0;
+      padding: 20px;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, #ffffff 0%, #fff8f3 100%);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(217, 95, 73, 0.12);
+    }
+
+    .top-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .score-card {
+      display: grid;
+      gap: 16px;
+      padding: 18px;
+      border-radius: 24px;
+      background: #fff;
+      border: 1px solid rgba(141, 113, 98, 0.12);
+      box-shadow: 0 14px 30px rgba(212, 98, 69, 0.08);
+    }
+
+    .score-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .score-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .score-sub {
+      color: var(--text-muted);
+    }
+
+    .progress-ring {
+      position: relative;
+      width: 108px;
+      height: 108px;
+    }
+
+    .progress-ring svg {
+      transform: rotate(-90deg);
+    }
+
+    .progress-ring circle {
+      fill: none;
+      stroke-width: 14;
+      stroke-linecap: round;
+    }
+
+    .progress-bg {
+      stroke: rgba(217, 95, 73, 0.16);
+    }
+
+    .progress-fg {
+      stroke: #D95F49;
+      stroke-dasharray: 339.292;
+      stroke-dashoffset: 80;
+      transition: stroke-dashoffset 0.8s ease;
+    }
+
+    .progress-label {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .status-pill {
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #3d6d57;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric-box {
+      padding: 16px;
+      border-radius: 22px;
+      background: #fff;
+      border: 1px solid rgba(153, 127, 109, 0.12);
+      box-shadow: 0 16px 28px rgba(45, 33, 25, 0.06);
+    }
+
+    .metric-title {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .metric-value {
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .section {
+      margin: 20px 0 0;
+      padding: 0 20px;
+    }
+
+    .section-header {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+
+    .section-label {
+      display: block;
+      color: var(--primary);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .section-note {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      max-width: 180px;
+      text-align: right;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(153, 127, 109, 0.12);
+      overflow: hidden;
+      animation: fadeInUp 0.5s ease both;
+    }
+
+    .card-body {
+      padding: 18px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .list-card {
+      display: grid;
+      gap: 14px;
+    }
+
+    .list-item {
+      padding: 16px;
+      border-radius: 22px;
+      background: #fff;
+      border: 1px solid rgba(153, 127, 109, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .list-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .list-title h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .list-sub {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    .tiny-pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #3d6d57;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .voice-controls {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .voice-btn {
+      padding: 16px 0;
+      border-radius: 20px;
+      border: none;
+      background: #fff;
+      box-shadow: 0 14px 24px rgba(45, 33, 25, 0.06);
+      font-weight: 800;
+      color: var(--text);
+      transition: transform var(--transition), background var(--transition);
+    }
+
+    .voice-btn:hover {
+      transform: translateY(-2px);
+      background: var(--primary-soft);
+    }
+
+    .select-control {
+      width: 100%;
+      border-radius: 18px;
+      border: 1px solid rgba(153, 127, 109, 0.16);
+      padding: 14px 12px;
+      background: #fff;
+      color: var(--text);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .timeline-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px;
+      border-radius: 22px;
+      background: #fff;
+      border: 1px solid rgba(153, 127, 109, 0.1);
+    }
+
+    .timeline-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      margin-top: 6px;
+      background: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .timeline-step.active .timeline-dot {
+      background: var(--accent);
+    }
+
+    .timeline-label {
+      font-weight: 700;
+    }
+
+    .timeline-text {
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .status-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .status-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px;
+      border-radius: 22px;
+      background: #fff;
+      border: 1px solid rgba(153, 127, 109, 0.1);
+    }
+
+    .status-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+    }
+
+    .status-icon {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .btn-group {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .large-action {
+      padding: 18px 0;
+      border-radius: 22px;
+      border: none;
+      font-size: 1rem;
+      font-weight: 800;
+      box-shadow: 0 18px 34px rgba(45, 33, 25, 0.08);
+      color: #fff;
+      transition: transform var(--transition), filter var(--transition);
+    }
+
+    .large-action:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-ok {
+      background: #6FAF91;
+    }
+
+    .btn-soso {
+      background: #E5A154;
+    }
+
+    .btn-help {
+      background: #D9645D;
+    }
+
+    .wellness-questions {
+      display: grid;
+      gap: 14px;
+    }
+
+    .question-card {
+      padding: 16px;
+      border-radius: 22px;
+      background: #fff;
+      border: 1px solid rgba(153, 127, 109, 0.12);
+    }
+
+    .question-label {
+      margin: 0 0 8px;
+      color: var(--text-muted);
+    }
+
+    .question-input {
+      width: 100%;
+      min-height: 50px;
+      border-radius: 16px;
+      border: 1px solid rgba(153, 127, 109, 0.16);
+      background: #faf4ee;
+      padding: 14px;
+      resize: vertical;
+    }
+
+    .wellness-score {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #fff 0%, #fffbf7 100%);
+      border: 1px solid rgba(217, 95, 73, 0.12);
+    }
+
+    .wellness-meta {
+      display: grid;
+      gap: 6px;
+    }
+
+    .wellness-meta strong {
+      font-size: 1.1rem;
+    }
+
+    .wellness-rating {
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .caregiver-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .caregiver-card {
+      padding: 16px;
+      border-radius: 22px;
+      background: #fff;
+      border: 1px solid rgba(153, 127, 109, 0.12);
+      display: grid;
+      gap: 12px;
+    }
+
+    .caregiver-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .caregiver-name {
+      font-weight: 800;
+    }
+
+    .caregiver-status {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .status-green {
+      background: #E6F3EB;
+      color: #25663F;
+    }
+
+    .status-yellow {
+      background: #FEF1E5;
+      color: #B06630;
+    }
+
+    .status-red {
+      background: #FCE9E8;
+      color: #A53430;
+    }
+
+    .journal-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .journal-card {
+      padding: 16px;
+      border-radius: 22px;
+      background: #fff;
+      border: 1px solid rgba(153, 127, 109, 0.12);
+    }
+
+    .journal-card p {
+      margin: 0;
+      line-height: 1.7;
+      color: var(--text-muted);
+    }
+
+    .add-note-row {
+      display: grid;
+      gap: 10px;
+    }
+
+    .add-note-input {
+      width: 100%;
+      border-radius: 18px;
+      border: 1px solid rgba(153, 127, 109, 0.16);
+      padding: 14px;
+      min-height: 52px;
+      background: #faf4ee;
+    }
+
+    .device-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .device-card {
+      padding: 16px;
+      border-radius: 24px;
+      background: #fff;
+      border: 1px solid rgba(153, 127, 109, 0.12);
+      display: grid;
+      gap: 10px;
+    }
+
+    .device-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .device-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #3d6d57;
+      font-weight: 700;
+    }
+
+    .emergency-card {
+      padding: 18px;
+      border-radius: 30px;
+      background: linear-gradient(180deg, #FFF7F3 0%, #FFEFE9 100%);
+      border: 1px solid rgba(217, 95, 73, 0.16);
+    }
+
+    .emergency-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .emergency-top h2 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .qr-code {
+      width: 86px;
+      height: 86px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fff 0%, #f8efe8 100%);
+      display: grid;
+      place-items: center;
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid rgba(217, 95, 73, 0.14);
+    }
+
+    .emergency-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .emergency-item {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    .emergency-button {
+      width: 100%;
+      margin-top: 18px;
+      padding: 18px;
+      border: none;
+      border-radius: 22px;
+      background: var(--danger);
+      color: #fff;
+      font-weight: 800;
+      font-size: 1rem;
+      box-shadow: 0 18px 34px rgba(217, 95, 73, 0.2);
+    }
+
+    .appointment-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .appointment-card {
+      padding: 16px;
+      border-radius: 24px;
+      background: #fff;
+      border: 1px solid rgba(153, 127, 109, 0.12);
+      display: grid;
+      gap: 10px;
+    }
+
+    .appointment-tag {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.82rem;
+    }
+
+    .appointment-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .app-btn {
+      padding: 14px 0;
+      border-radius: 18px;
+      border: none;
+      font-weight: 800;
+    }
+
+    .app-btn.complete {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .app-btn.reschedule {
+      background: #fff;
+      color: var(--text);
+      border: 1px solid rgba(153, 127, 109, 0.14);
+    }
+
+    .trends-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .trend-card {
+      padding: 16px;
+      border-radius: 24px;
+      background: #fff;
+      border: 1px solid rgba(153, 127, 109, 0.12);
+    }
+
+    .trend-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .chart-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 130px;
+    }
+
+    .chart-bar {
+      flex: 1;
+      border-radius: 14px 14px 0 0;
+      background: linear-gradient(180deg, var(--accent), #9bbfa9);
+      position: relative;
+    }
+
+    .chart-bar span {
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .streak-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .streak-card {
+      padding: 16px;
+      border-radius: 24px;
+      background: #fff;
+      border: 1px solid rgba(153, 127, 109, 0.12);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .streak-info {
+      display: grid;
+      gap: 4px;
+    }
+
+    .streak-label {
+      color: var(--text-muted);
+    }
+
+    .streak-value {
+      font-weight: 800;
+    }
+
+    .chat-card {
+      padding: 18px;
+      border-radius: 30px;
+      background: linear-gradient(180deg, #ffffff 0%, #f4e6df 100%);
+      border: 1px solid rgba(153, 127, 109, 0.14);
+    }
+
+    .chat-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .chat-messages {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .chat-message {
+      padding: 14px 16px;
+      border-radius: 24px;
+      max-width: 92%;
+      line-height: 1.6;
+    }
+
+    .chat-user {
+      justify-self: end;
+      background: #D95F49;
+      color: #fff;
+      border-bottom-right-radius: 6px;
+    }
+
+    .chat-bot {
+      justify-self: start;
+      background: #fff;
+      color: var(--text);
+      border-bottom-left-radius: 6px;
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .chat-input {
+      flex: 1;
+      border-radius: 20px;
+      border: 1px solid rgba(153, 127, 109, 0.14);
+      padding: 14px 16px;
+      background: #faf4ee;
+    }
+
+    .chat-send {
+      padding: 0 18px;
+      border-radius: 20px;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .demo-questions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .demo-btn {
+      padding: 6px 12px;
+      border-radius: 14px;
+      background: rgba(217, 95, 73, 0.1);
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .demo-btn:hover {
+      background: rgba(217, 95, 73, 0.2);
+    }
+
+    .family-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .family-card {
+      padding: 18px;
+      border-radius: 24px;
+      background: #fff;
+      border: 1px solid rgba(153, 127, 109, 0.12);
+      display: grid;
+      gap: 10px;
+    }
+
+    .family-note {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .family-card strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .navbar {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 470px;
+      height: var(--nav-height);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      border-top: 1px solid rgba(153, 127, 109, 0.12);
+      z-index: 30;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      width: 62px;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-item svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 90px;
+      transform: translateX(-50%);
+      background: rgba(46, 35, 27, 0.96);
+      color: #fff;
+      padding: 14px 18px;
+      border-radius: 22px;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.18);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease;
+      z-index: 40;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+      animation: fadeInUp 0.4s ease;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <header class="header">
+      <div class="header-left">
+        <span>CareBuddy AI</span>
+        <h1>Senior Health Dashboard</h1>
+      </div>
+      <div class="header-right">
+        <button class="icon-button" id="connectHeaderBtn" aria-label="Connect device">
+          <span>🔌</span> Connect device
+        </button>
+      </div>
+    </header>
+    <div id="screens">
+      <section id="dashboardSection" class="screen active">
+        <div class="top-card">
+          <div class="top-grid">
+            <div class="score-card">
+              <div class="score-row">
+                <div>
+                  <div class="score-value" id="healthScore">89</div>
+                  <div class="score-sub">Health Score</div>
+                </div>
+                <div class="progress-ring">
+                  <svg width="108" height="108" viewBox="0 0 120 120">
+                    <circle class="progress-bg" cx="60" cy="60" r="52"></circle>
+                    <circle class="progress-fg" cx="60" cy="60" r="52"></circle>
+                  </svg>
+                  <div class="progress-label" id="healthPercent">89%</div>
+                </div>
+              </div>
+              <div class="metric-grid">
+                <div class="metric-box">
+                  <div class="metric-title">Today's Wellness</div>
+                  <div class="metric-value" id="wellnessStatus">Good</div>
+                </div>
+                <div class="metric-box">
+                  <div class="metric-title">Medicine Adherence</div>
+                  <div class="metric-value" id="adherence">92%</div>
+                </div>
+                <div class="metric-box">
+                  <div class="metric-title">Upcoming Appointments</div>
+                  <div class="metric-value" id="appointmentsCount">2</div>
+                </div>
+                <div class="metric-box">
+                  <div class="metric-title">Emergency Status</div>
+                  <div class="metric-value" id="emergencyStatus">Stable</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top: 20px;">
+          <div>
+            <span class="section-label">AI Assistant</span>
+            <h2 class="section-title">Voice Assistant</h2>
+          </div>
+          <p class="section-note">CareBuddy AI reads your reminders and summary.</p>
+        </div>
+        <div class="card chat-card">
+          <div class="chat-top">
+            <div>
+              <h3 style="margin:0;">CareBuddy AI</h3>
+              <p class="list-sub">Ask for reminders, appointments, or health updates.</p>
+            </div>
+            <div class="tiny-pill">AI Ready</div>
+          </div>
+          <div class="chat-messages" id="chatMessages">
+            <div class="chat-message chat-bot">Hello! I can read your reminders, open the emergency card, and share your
+              health summary.</div>
+          </div>
+          <div class="chat-input-row">
+            <input class="chat-input" id="chatInput" placeholder="Ask CareBuddy AI..." />
+            <button type="button" class="chat-send" id="sendChatBtn">Send</button>
+          </div>
+          <div class="demo-questions" id="demoQuestions">
+            <button type="button" class="demo-btn" onclick="handleChatSend(this.textContent)">Next appointment?</button>
+            <button type="button" class="demo-btn" onclick="handleChatSend(this.textContent)">Did I take my meds?</button>
+            <button type="button" class="demo-btn" onclick="handleChatSend(this.textContent)">What is my health score?</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="medicinesSection" class="screen">
+        <div class="section-header">
+          <div>
+            <span class="section-label">Medicine Alerts</span>
+            <h2 class="section-title">Personalized Voice Medicine Alerts</h2>
+          </div>
+          <p class="section-note">Family voices bring reminders to life.</p>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="list-card" id="medicineList"></div>
+            <div class="voice-controls">
+              <button type="button" class="voice-btn" id="recordVoiceBtn">Record Family Voice</button>
+              <button type="button" class="voice-btn" id="selectVoiceBtn">Select Daughter Voice</button>
+              <button type="button" class="voice-btn" id="playReminderBtn">Play Reminder</button>
+            </div>
+            <div class="list-item">
+              <div class="list-title">
+                <h3>Example Reminder</h3><span class="tiny-pill">Active</span>
+              </div>
+              <p class="list-sub">"Grandpa, it's time to take your blood pressure medicine."</p>
+            </div>
+            <div class="timeline" id="activeReminderTimeline"></div>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top: 18px;">
+          <div>
+            <span class="section-label">Escalation</span>
+            <h2 class="section-title">Missed Medicine Escalation System</h2>
+          </div>
+          <p class="section-note">Visual escalation for missed alerts.</p>
+        </div>
+        <div class="card">
+          <div class="card-body timeline" id="escalationTimeline"></div>
+        </div>
+      </section>
+
+      <section id="wellnessSection" class="screen">
+        <div class="section-header">
+          <div>
+            <span class="section-label">Wellness</span>
+            <h2 class="section-title">Daily Wellness Check</h2>
+          </div>
+          <p class="section-note">Track sleep, pain, energy and mood.</p>
+        </div>
+        <div class="card">
+          <div class="card-body wellness-questions">
+            <div class="question-card">
+              <p class="question-label">How did you sleep?</p><textarea class="question-input" id="sleepInput"
+                placeholder="Good, restful, or restless..."></textarea>
+            </div>
+            <div class="question-card">
+              <p class="question-label">Any pain today?</p><textarea class="question-input" id="painInput"
+                placeholder="Where and how severe..."></textarea>
+            </div>
+            <div class="question-card">
+              <p class="question-label">Energy level?</p><textarea class="question-input" id="energyInput"
+                placeholder="High, moderate, low..."></textarea>
+            </div>
+            <div class="question-card">
+              <p class="question-label">Did you take medicines?</p><textarea class="question-input" id="medInput"
+                placeholder="Yes / partial / missed..."></textarea>
+            </div>
+            <div class="question-card">
+              <p class="question-label">Mood today?</p><textarea class="question-input" id="moodInput"
+                placeholder="Happy, calm, anxious..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top: 18px;">
+          <div>
+            <span class="section-label">Check-In</span>
+            <h2 class="section-title">One-Tap Wellness Check-In</h2>
+          </div>
+          <p class="section-note">Large friendly buttons for quick feedback.</p>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="btn-group">
+              <button type="button" class="large-action btn-ok" id="okayBtn">I'm Okay</button>
+              <button type="button" class="large-action btn-soso" id="sosoBtn">Not Feeling Great</button>
+              <button type="button" class="large-action btn-help" id="helpBtn">Need Help</button>
+            </div>
+            <div class="status-card" id="checkinStatusCard">
+              <div><strong>Status:</strong> <span id="checkinStatusText">Waiting for your check-in.</span></div>
+              <div class="tiny-pill">Family notified when needed</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="caregiverSection" class="screen">
+        <div class="section-header">
+          <div>
+            <span class="section-label">Care Team</span>
+            <h2 class="section-title">Caregiver Dashboard</h2>
+          </div>
+          <p class="section-note">Family members monitoring senior progress.</p>
+        </div>
+        <div class="card caregiver-grid" id="caregiverDashboard"></div>
+
+        <div class="section-header" style="margin-top: 18px;">
+          <div>
+            <span class="section-label">Journal</span>
+            <h2 class="section-title">Smart Health Journal</h2>
+          </div>
+          <p class="section-note">Voice notes, text notes, daily observations.</p>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="add-note-row">
+              <textarea class="add-note-input" id="journalInput"
+                placeholder="Felt dizzy after lunch... BP was normal today..."></textarea>
+              <button type="button" class="voice-btn" id="saveJournalBtn">Save Journal Note</button>
+            </div>
+            <div class="journal-grid" id="journalHistory"></div>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top: 18px;">
+          <div>
+            <span class="section-label">Devices</span>
+            <h2 class="section-title">Connected Devices</h2>
+          </div>
+          <p class="section-note">Monitor device connectivity and sync status.</p>
+        </div>
+        <div class="card device-grid" id="deviceGrid"></div>
+      </section>
+
+      <section id="emergencySection" class="screen">
+        <div class="section-header">
+          <div>
+            <span class="section-label">Emergency</span>
+            <h2 class="section-title">Emergency Health Card</h2>
+          </div>
+          <p class="section-note">Immediate access to critical info.</p>
+        </div>
+        <div class="card emergency-card">
+          <div class="emergency-top">
+            <div>
+              <h2>Emergency Profile</h2>
+              <p class="list-sub">Large, easy-to-read emergency details.</p>
+            </div>
+            <div class="qr-code">QR CODE</div>
+          </div>
+          <div class="emergency-list">
+            <div class="emergency-item"><span>Name</span><span id="emergencyName">Rajesh Kumar</span></div>
+            <div class="emergency-item"><span>Blood Group</span><span id="emergencyBlood">O+</span></div>
+            <div class="emergency-item"><span>Allergies</span><span id="emergencyAllergies">None</span></div>
+            <div class="emergency-item"><span>Diseases</span><span id="emergencyDiseases">Hypertension</span></div>
+            <div class="emergency-item"><span>Current Medicines</span><span id="emergencyMedicines">BP Tablet, Diabetes
+                Tablet</span></div>
+            <div class="emergency-item"><span>Emergency Contact</span><span id="emergencyContact">+91 98765 43210</span>
+            </div>
+            <div class="emergency-item"><span>Doctor Contact</span><span id="emergencyDoctor">Dr. Anjali Sharma</span>
+            </div>
+          </div>
+          <button type="button" class="emergency-button" id="openEmergencyBtn">Open Emergency Card</button>
+        </div>
+      </section>
+
+      <section id="profileSection" class="screen">
+        <div class="section-header">
+          <div>
+            <span class="section-label">Profile</span>
+            <h2 class="section-title">Senior Profile</h2>
+          </div>
+          <p class="section-note">Quick access to the senior's most important profile details.</p>
+        </div>
+        <div class="card" id="profileInfo"></div>
+        <div class="section-header" style="margin-top: 18px;">
+          <div>
+            <span class="section-label">Family Support</span>
+            <h2 class="section-title">Family Support Center</h2>
+          </div>
+          <p class="section-note">Recent family check-ins and caregiver updates.</p>
+        </div>
+        <div class="card family-grid" id="familySupportGrid"></div>
+      </section>
+    </div>
+
+    <nav class="navbar">
+      <div class="nav-item active" id="navDashboardBtn" data-target="dashboardSection"><svg viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg><span>Dashboard</span></div>
+      <div class="nav-item" id="navMedicinesBtn" data-target="medicinesSection"><svg viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2">
+          <path
+            d="M10.5 20H4a2 2 0 01-2-2V5c0-1.1.9-2 2-2h3.93a2 2 0 011.66.9l.82 1.2a2 2 0 001.66.9H20a2 2 0 012 2v3" />
+          <circle cx="18" cy="18" r="3" />
+          <path d="M18 15v6M15 18h6" />
+        </svg><span>Medicines</span></div>
+      <div class="nav-item" id="navWellnessBtn" data-target="wellnessSection"><svg viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2">
+          <path d="M3 12h18M3 6h18M3 18h18" />
+        </svg><span>Wellness</span></div>
+      <div class="nav-item" id="navCaregiverBtn" data-target="caregiverSection"><svg viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg><span>Caregiver</span></div>
+      <div class="nav-item" id="navEmergencyBtn" data-target="emergencySection"><svg viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2">
+          <path d="M18 8a6 6 0 11-12 0 6 6 0 0112 0z" />
+          <path d="M2 22c0-2.7 3.6-5 8-5s8 2.3 8 5" />
+        </svg><span>Emergency</span></div>
+      <div class="nav-item" id="navProfileBtn" data-target="profileSection"><svg viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg><span>Profile</span></div>
+    </nav>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      const data = {
+        medicineAlerts: [
+          { name: 'Morning BP Tablet', schedule: '8:00 AM', voice: 'Daughter', assigned: 'daughter' },
+          { name: 'Afternoon Diabetes Tablet', schedule: '2:00 PM', voice: 'Son', assigned: 'son' },
+          { name: 'Night Sleep Support', schedule: '9:00 PM', voice: 'Grandchild', assigned: 'granddaughter' }
+        ],
+        escalation: [
+          { step: 'Medicine Due', text: 'Time to take the medicine.', active: true },
+          { step: 'Reminder Sent', text: 'Family voice reminder delivered.', active: true },
+          { step: '30 Minutes Passed', text: 'Second reminder queued.', active: true },
+          { step: '1 Hour Passed', text: 'Caregiver notified.', active: false },
+          { step: '3 Hours Passed', text: 'Entire family notified.', active: false }
+        ],
+        caregivers: [
+          { name: 'Mother', status: 'Healthy', color: 'status-green', adherence: '95%', missed: 1, activity: 'Checked today' },
+          { name: 'Father', status: 'Attention Needed', color: 'status-yellow', adherence: '82%', missed: 2, activity: 'Missed morning dose' },
+          { name: 'Grandmother', status: 'Healthy', color: 'status-green', adherence: '97%', missed: 0, activity: 'Walked 1500 steps' },
+          { name: 'Grandfather', status: 'Immediate Attention', color: 'status-red', adherence: '72%', missed: 3, activity: 'Skipped evening tablet' }
+        ],
+        journals: [
+          { text: 'Felt dizzy after lunch, need to rest more.', time: 'Today · 11:30 AM' },
+          { text: 'BP was normal today after morning walk.', time: 'Today · 8:45 AM' }
+        ],
+        devices: [
+          { name: 'Smart Watch', status: 'Connected', battery: '82%', sync: '5 min ago' },
+          { name: 'Blood Pressure Monitor', status: 'Connected', battery: '67%', sync: '12 min ago' },
+          { name: 'Glucose Monitor', status: 'Standby', battery: '74%', sync: '40 min ago' },
+          { name: 'Fitness Tracker', status: 'Connected', battery: '58%', sync: '18 min ago' }
+        ],
+        appointments: [
+          { doctor: 'Dr. Anjali Sharma', hospital: 'City Care Hospital', date: 'Jun 18, 2026', status: 'Reminder On' },
+          { doctor: 'Dr. Sunil Mehta', hospital: 'Greenway Clinic', date: 'Jul 02, 2026', status: 'Reminder Off' }
+        ],
+        trends: [
+          { title: 'Blood Pressure', value: 78, label: '120/80' },
+          { title: 'Sugar Levels', value: 62, label: '110 mg/dL' },
+          { title: 'Weight', value: 51, label: '68 kg' },
+          { title: 'Heart Rate', value: 72, label: '68 bpm' }
+        ],
+        streaks: [
+          { title: 'Medicine Streak', value: '18 days' },
+          { title: 'Walking Streak', value: '12 days' },
+          { title: 'Checkup Streak', value: '4 visits' }
+        ],
+        familySupport: [
+          { title: 'Daughter checked your health status today.', note: 'Sent a kind encouragement message.', time: '2 min ago' },
+          { title: 'Son updated your medicine schedule.', note: 'Added afternoon supplement reminder.', time: '1 hr ago' },
+          { title: 'Caregiver noted hydration needs.', note: 'Reminded to drink water after meals.', time: '3 hrs ago' }
+        ]
+      };
+
+      let selectedVoice = 'Daughter';
+
+      let caregiverFamily = [];
+      let caregiverRecords = [];
+      let elderProfile = null;
+
+      function normalizeFamilyMember(member) {
+        if (!member) return member;
+        if (!member.prescriptions) member.prescriptions = [];
+        member.prescriptions = member.prescriptions.map(rx => typeof rx === 'string' ? { id: `presc-${Date.now()}-${Math.random().toString(36).slice(2)}`, name: rx, dosage: '', notes: '' } : rx);
+        return member;
+      }
+
+      function loadCaregiverSideData() {
+        caregiverFamily = [];
+        caregiverRecords = [];
+        try {
+          const raw = localStorage.getItem('mdei_family_members');
+          const parsed = raw ? JSON.parse(raw) : null;
+          if (Array.isArray(parsed) && parsed.length) {
+            caregiverFamily = parsed.map(normalizeFamilyMember);
+          }
+        } catch (err) {
+          console.warn('Failed to load caregiver family data', err);
+        }
+        try {
+          const raw = localStorage.getItem('mdei_uploaded_records');
+          const parsed = raw ? JSON.parse(raw) : null;
+          if (Array.isArray(parsed)) caregiverRecords = parsed;
+        } catch (err) {
+          console.warn('Failed to load caregiver records', err);
+        }
+        elderProfile = caregiverFamily.find(m => /grandmother|grandfather|elder|senior|meera/i.test(m.name + ' ' + (m.relation || '')))
+          || caregiverFamily.find(m => m.relation && /grandparent|grand/.test(m.relation.toLowerCase()))
+          || caregiverFamily[0] || null;
+      }
+
+      function setEmergencyProfileFromElder(member) {
+        if (!member) return;
+        document.getElementById('emergencyName').textContent = member.name || 'Unknown';
+        document.getElementById('emergencyBlood').textContent = member.blood || 'Unknown';
+        document.getElementById('emergencyAllergies').textContent = member.allergies || 'None';
+        document.getElementById('emergencyDiseases').textContent = (member.badges || []).join(', ') || 'N/A';
+        document.getElementById('emergencyMedicines').textContent = (member.prescriptions || []).map(rx => typeof rx === 'string' ? rx : rx.name).join(', ') || 'None';
+        document.getElementById('emergencyContact').textContent = member.emergency || 'Not set';
+        document.getElementById('emergencyDoctor').textContent = member.doctor || 'Dr. Anjali Sharma';
+      }
+
+      function setTopProfileMetrics(member) {
+        if (!member) return;
+        document.getElementById('healthScore').textContent = member.score || 68;
+        document.getElementById('healthPercent').textContent = `${member.score || 68}%`;
+        document.getElementById('wellnessStatus').textContent = member.status || 'Stable';
+        document.getElementById('adherence').textContent = member.stats?.find(s => s.label === 'Meds')?.value || '5 daily';
+        document.getElementById('appointmentsCount').textContent = caregiverRecords.length ? caregiverRecords.length : 2;
+        document.getElementById('emergencyStatus').textContent = member.status && /need|attention/i.test(member.status) ? 'Needs Attention' : 'Stable';
+        updateWellnessSummary(member);
+      }
+
+      function updateWellnessSummary(member) {
+        const score = member?.score ?? 82;
+        document.getElementById('dailyWellnessScore').textContent = `${score} / 100`;
+        const rating = score >= 90 ? 'Excellent' : score >= 75 ? 'Good' : score >= 60 ? 'Fair' : 'Needs Care';
+        document.getElementById('wellnessRating').textContent = rating;
+      }
+
+      function createElement(html) {
+        const template = document.createElement('template');
+        template.innerHTML = html.trim();
+        return template.content.firstChild;
+      }
+
+      function renderMedicineList() {
+        const container = document.getElementById('medicineList');
+        if (!container) return;
+        container.innerHTML = '';
+        const member = elderProfile;
+        const medicines = member ? (member.prescriptions || []).map(rx => ({
+          name: typeof rx === 'string' ? rx : rx.name || 'Medicine',
+          schedule: typeof rx === 'object' && rx.dosage ? rx.dosage : 'Daily',
+          voice: member.voiceAlerts ? 'Family Voice' : 'CareBuddy AI'
+        })) : data.medicineAlerts;
+        if (!medicines.length) {
+          container.innerHTML = '<div class="list-item"><div class="list-title"><h3>No medicines found</h3></div><div class="list-sub">Sync with caregiver app to see prescriptions.</div></div>';
+          return;
+        }
+        medicines.forEach(item => {
+          const node = createElement(`
+      <div class="list-item">
+        <div class="list-title"><h3>${item.name}</h3><span class="tiny-pill">${item.schedule}</span></div>
+        <div class="list-sub">Voice: ${item.voice}</div>
+      </div>
+    `);
+          container.appendChild(node);
+        });
+      }
+
+      function renderActiveReminderTimeline() {
+        const container = document.getElementById('activeReminderTimeline');
+        if (!container) return;
+        container.innerHTML = '';
+        const steps = [
+          'Voice Selected',
+          'Reminder Scheduled',
+          'Voice Reminder Ready',
+          'Awaiting Response'
+        ];
+        steps.forEach((step, idx) => {
+          const item = createElement(`
+      <div class="timeline-step${idx === 2 ? ' active' : ''}">
+        <div class="timeline-dot"></div>
+        <div>
+          <div class="timeline-label">${step}</div>
+          <div class="timeline-text">${idx === 2 ? 'Playing reminder voice shortly.' : 'Status update.'}</div>
+        </div>
+      </div>
+    `);
+          container.appendChild(item);
+        });
+      }
+
+      function renderEscalation() {
+        const container = document.getElementById('escalationTimeline');
+        if (!container) return;
+        container.innerHTML = '';
+        data.escalation.forEach(item => {
+          const node = createElement(`
+      <div class="timeline-step${item.active ? ' active' : ''}">
+        <div class="timeline-dot"></div>
+        <div>
+          <div class="timeline-label">${item.step}</div>
+          <div class="timeline-text">${item.text}</div>
+        </div>
+      </div>
+    `);
+          container.appendChild(node);
+        });
+      }
+
+      function renderCaregiverDashboard() {
+        const container = document.getElementById('caregiverDashboard');
+        if (!container) return;
+        container.innerHTML = '';
+        const roster = caregiverFamily.length ? caregiverFamily : data.caregivers.map(item => ({
+          name: item.name,
+          status: item.status,
+          color: item.color,
+          adherence: item.adherence,
+          missed: item.missed,
+          activity: item.activity
+        }));
+        roster.forEach(member => {
+          const adherenceLabel = member.adherence || (member.stats?.find(s => s.label === 'Meds')?.value || 'Unknown');
+          const missed = member.missed ?? 0;
+          const activity = member.activity || 'Updated recently';
+          const colorClass = member.color || 'status-green';
+          const node = createElement(`
+      <div class="caregiver-card">
+        <div class="caregiver-top"><div class="caregiver-name">${member.name}</div><span class="caregiver-status ${colorClass}">${member.status || 'Active'}</span></div>
+        <div class="list-sub">Medication Adherence: ${adherenceLabel}</div>
+        <div class="list-sub">Missed Alerts: ${missed}</div>
+        <div class="list-sub">Last Activity: ${activity}</div>
+      </div>
+    `);
+          container.appendChild(node);
+        });
+      }
+
+      function renderJournalHistory() {
+        const container = document.getElementById('journalHistory');
+        if (!container) return;
+        container.innerHTML = '';
+        data.journals.forEach(note => {
+          const node = createElement(`
+      <div class="journal-card">
+        <strong>${note.time}</strong>
+        <p>${note.text}</p>
+      </div>
+    `);
+          container.appendChild(node);
+        });
+      }
+
+      function renderDevices() {
+        const container = document.getElementById('deviceGrid');
+        if (!container) return;
+        container.innerHTML = '';
+        data.devices.forEach(device => {
+          const node = createElement(`
+      <div class="device-card">
+        <div class="device-head"><strong>${device.name}</strong><span class="device-status">${device.status}</span></div>
+        <div class="list-sub">Battery: ${device.battery}</div>
+        <div class="list-sub">Latest Sync: ${device.sync}</div>
+      </div>
+    `);
+          container.appendChild(node);
+        });
+      }
+
+      function renderAppointments() {
+        const container = document.getElementById('appointmentGrid');
+        if (!container) return;
+        container.innerHTML = '';
+        data.appointments.forEach(item => {
+          const node = createElement(`
+      <div class="appointment-card">
+        <div class="appointment-tag">${item.status}</div>
+        <div class="list-title"><h3>${item.doctor}</h3><span>${item.date}</span></div>
+        <div class="list-sub">${item.hospital}</div>
+        <div class="appointment-actions">
+          <button class="app-btn complete">Mark Completed</button>
+          <button class="app-btn reschedule">Reschedule</button>
+        </div>
+      </div>
+    `);
+          container.appendChild(node);
+        });
+      }
+
+      function renderTrends() {
+        const container = document.getElementById('trendGrid');
+        if (!container) return;
+        container.innerHTML = '';
+        data.trends.forEach(item => {
+          const node = createElement(`
+      <div class="trend-card">
+        <div class="trend-title"><strong>${item.title}</strong><span>${item.label}</span></div>
+        <div class="chart-row">
+          <div class="chart-bar" style="height:${item.value + 20}%;"><span>${item.value}%</span></div>
+          <div class="chart-bar" style="height:${item.value - 10}%;"></div>
+          <div class="chart-bar" style="height:${item.value - 22}%;"></div>
+          <div class="chart-bar" style="height:${item.value - 6}%;"></div>
+        </div>
+      </div>
+    `);
+          container.appendChild(node);
+        });
+      }
+
+      function renderStreaks() {
+        const container = document.getElementById('streakGrid');
+        if (!container) return;
+        container.innerHTML = '';
+        data.streaks.forEach(item => {
+          const node = createElement(`
+      <div class="streak-card">
+        <div>
+          <div class="streak-label">${item.title}</div>
+          <div class="streak-value">${item.value}</div>
+        </div>
+        <div class="tiny-pill">Keep going</div>
+      </div>
+    `);
+          container.appendChild(node);
+        });
+      }
+
+      function renderFamilySupport() {
+        const container = document.getElementById('familySupportGrid');
+        if (!container) return;
+        container.innerHTML = '';
+        data.familySupport.forEach(item => {
+          const node = createElement(`
+      <div class="family-card">
+        <strong>${item.title}</strong>
+        <p class="family-note">${item.note}</p>
+        <div class="list-sub">${item.time}</div>
+      </div>
+    `);
+          container.appendChild(node);
+        });
+      }
+
+      function renderProfileInfo() {
+        const container = document.getElementById('profileInfo');
+        if (!container) return;
+        const member = elderProfile || caregiverFamily[0] || {
+          name: 'Senior Member', relation: 'Self', age: '72', blood: 'O+', status: 'Stable', notes: 'No current notes.'
+        };
+        const prescriptions = (member.prescriptions || []).map(rx => typeof rx === 'string' ? rx : rx.name).join(', ') || 'No prescriptions added';
+        container.innerHTML = `
+    <div class="list-item">
+      <div class="list-title"><h3>${member.name || 'Senior Member'}</h3><span class="tiny-pill">${member.relation || 'Elder'}</span></div>
+      <div class="list-sub">Age: ${member.age || member.ageGroup || '72'}</div>
+      <div class="list-sub">Blood Group: ${member.blood || 'O+'}</div>
+      <div class="list-sub">Status: ${member.status || 'Stable'}</div>
+      <div class="list-sub">Prescriptions: ${prescriptions}</div>
+      <div class="list-sub">Notes: ${member.notes || member.notes || 'No additional notes.'}</div>
+    </div>
+  `;
+      }
+
+      function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+        const target = document.getElementById(screenId);
+        if (target) target.classList.add('active');
+      }
+
+      function setupNavButtons() {
+        const navItems = document.querySelectorAll('.navbar .nav-item[data-target]');
+        navItems.forEach(item => {
+          item.addEventListener('click', () => {
+            const targetId = item.dataset.target;
+            showScreen(targetId);
+            navItems.forEach(nav => nav.classList.remove('active'));
+            item.classList.add('active');
+          });
+        });
+      }
+
+      function speak(text) {
+        if (!window.speechSynthesis) return;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1;
+        utterance.pitch = 1.05;
+        utterance.lang = 'en-US';
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utterance);
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.style.opacity = '1';
+        clearTimeout(window.toastTimer);
+        window.toastTimer = setTimeout(() => toast.style.opacity = '0', 2600);
+      }
+
+      function bindClick(id, handler) {
+        const element = document.getElementById(id);
+        if (!element) {
+          console.warn(`Missing button element: ${id}`);
+          return;
+        }
+        element.addEventListener('click', handler);
+      }
+
+      function handleChatSend(eOrText) {
+        try {
+          const input = document.getElementById('chatInput');
+          let text = '';
+
+          if (typeof eOrText === 'string') {
+            text = eOrText.trim();
+          } else if (input && input.value) {
+            text = input.value.trim();
+          }
+
+          if (!text) return;
+
+          const chatMessages = document.getElementById('chatMessages');
+          if (!chatMessages) return;
+
+          const userMsg = document.createElement('div');
+          userMsg.className = 'chat-message chat-user';
+          userMsg.textContent = text;
+          chatMessages.appendChild(userMsg);
+
+          const botMsg = document.createElement('div');
+          botMsg.className = 'chat-message chat-bot';
+          botMsg.textContent = 'CareBuddy AI is thinking...';
+          chatMessages.appendChild(botMsg);
+
+          if (input) input.value = '';
+          botMsg.scrollIntoView({ behavior: 'smooth' });
+
+          setTimeout(() => {
+            try {
+              let response = `I'm not quite sure about that. Try asking about your medicines, appointments, health score, devices, or emergency contacts!`;
+              const lower = text.toLowerCase();
+
+              if (text === "Next appointment?" || lower.includes('appointment')) {
+                const nextAppt = (data.appointments && data.appointments.length > 0) ? data.appointments[0] : { doctor: 'Dr. Anjali Sharma', hospital: 'City Care Hospital', date: 'Jun 18, 2026' };
+                response = `Your next appointment is with ${nextAppt.doctor} at ${nextAppt.hospital} on ${nextAppt.date}. I have already set a reminder for you!`;
+              } else if (text === "Did I take my meds?" || lower.includes('meds') || lower.includes('medicine')) {
+                response = `Yes! You took your Morning BP Tablet at 8:00 AM. Your next medicine is your Afternoon Diabetes Tablet at 2:00 PM. Keep up the great 92% adherence!`;
+              } else if (text === "What is my health score?" || lower.includes('score') || lower.includes('health')) {
+                const score = (elderProfile && elderProfile.score) ? elderProfile.score : 89;
+                response = `Your current health score is ${score} out of 100. Your vitals are perfectly stable today. You are doing fantastic!`;
+              } else if (lower.includes('emergency') || lower.includes('contact')) {
+                const contact = (elderProfile && elderProfile.emergency) ? elderProfile.emergency : '+91 98765 43210';
+                const doc = (elderProfile && elderProfile.doctor) ? elderProfile.doctor : 'Dr. Anjali Sharma';
+                response = `Your emergency contact is ${contact} and your doctor is ${doc}.`;
+              } else if ((lower.includes('device') || lower.includes('watch') || lower.includes('battery')) && data.devices) {
+                const devicesStr = data.devices.map(d => `${d.name} (${d.battery})`).join(', ');
+                response = `Your connected devices are: ${devicesStr}. They are properly synced.`;
+              } else if (lower.includes('blood pressure') || lower.includes('bp') || lower.includes('sugar') || lower.includes('trend')) {
+                const bp = (data.trends && data.trends.find(t => t.title.includes('Blood Pressure'))) ? data.trends.find(t => t.title.includes('Blood Pressure')).label : '120/80';
+                const sugar = (data.trends && data.trends.find(t => t.title.includes('Sugar'))) ? data.trends.find(t => t.title.includes('Sugar')).label : '110 mg/dL';
+                response = `Your latest Blood Pressure is ${bp} and Sugar Levels are ${sugar}. Both are in the normal range.`;
+              } else if ((lower.includes('family') || lower.includes('caregiver') || lower.includes('daughter') || lower.includes('son')) && data.familySupport && data.familySupport.length > 0) {
+                const fam = data.familySupport[0];
+                response = `Your family is connected. ${fam.title} ${fam.note}`;
+              } else if ((lower.includes('journal') || lower.includes('note') || lower.includes('feel')) && data.journals && data.journals.length > 0) {
+                response = `You recently noted: "${data.journals[0].text}". I've logged this for your caregivers.`;
+              } else if (lower.includes('hello') || lower.includes('hi ')) {
+                response = `Hello! I am CareBuddy AI. I can help you with your health summary, reminders, and daily check-ins.`;
+              }
+
+              botMsg.textContent = response;
+              speak(response);
+            } catch (err) {
+              console.error("ChatBot AI Error: ", err);
+              botMsg.textContent = "I encountered a small error. Please try asking again!";
+            }
+          }, 900);
+        } catch (err) {
+          console.error("ChatBot Error: ", err);
+        }
+      }
+
+      function init() {
+        loadCaregiverSideData();
+        renderMedicineList();
+        renderActiveReminderTimeline();
+        renderEscalation();
+        renderCaregiverDashboard();
+        renderJournalHistory();
+        renderDevices();
+        renderAppointments();
+        renderTrends();
+        renderStreaks();
+        renderFamilySupport();
+        renderProfileInfo();
+        setupNavButtons();
+        setTopProfileMetrics(elderProfile || caregiverFamily[0] || null);
+        setEmergencyProfileFromElder(elderProfile || caregiverFamily[0] || null);
+
+        bindClick('recordVoiceBtn', () => {
+          showToast('Record Family Voice activated.');
+        });
+
+        bindClick('selectVoiceBtn', () => {
+          selectedVoice = selectedVoice === 'Daughter' ? 'Son' : selectedVoice === 'Son' ? 'Grandchild' : 'Daughter';
+          const btn = document.getElementById('selectVoiceBtn');
+          if (btn) btn.textContent = `Select ${selectedVoice} Voice`;
+          showToast(`${selectedVoice} voice selected.`);
+        });
+
+        bindClick('playReminderBtn', () => {
+          const message = `Grandpa, it's time to take your blood pressure medicine.`;
+          const msg = document.createElement('div');
+          msg.className = 'chat-message chat-bot';
+          msg.textContent = `${selectedVoice} voice reminder: "${message}"`;
+          const chatMessages = document.getElementById('chatMessages');
+          if (chatMessages) chatMessages.appendChild(msg);
+          msg.scrollIntoView({ behavior: 'smooth' });
+          showToast('Playing reminder now.');
+          speak(message);
+        });
+
+        bindClick('connectHeaderBtn', () => {
+          showToast('Connecting a new device...');
+        });
+
+        bindClick('sendChatBtn', handleChatSend);
+        const chatInput = document.getElementById('chatInput');
+        if (chatInput) {
+          chatInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault();
+              handleChatSend();
+            }
+          });
+        }
+
+        bindClick('okayBtn', () => {
+          const statusText = document.getElementById('checkinStatusText');
+          if (statusText) statusText.textContent = 'You are okay. Family notified with a warm message.';
+          showToast('Great! Family updated your status.');
+        });
+        bindClick('sosoBtn', () => {
+          const statusText = document.getElementById('checkinStatusText');
+          if (statusText) statusText.textContent = 'Not feeling great. Caregiver will check in soon.';
+          showToast('Caregiver alerted to check in.');
+        });
+        bindClick('helpBtn', () => {
+          const statusText = document.getElementById('checkinStatusText');
+          if (statusText) statusText.textContent = 'Need help! Emergency contacts are being notified.';
+          showToast('Emergency family alert sent.');
+        });
+
+        bindClick('saveJournalBtn', () => {
+          const input = document.getElementById('journalInput');
+          const value = input?.value.trim() || '';
+          if (!value) { showToast('Write a note before saving.'); return; }
+          data.journals.unshift({ text: value, time: 'Just now' });
+          renderJournalHistory();
+          if (input) input.value = '';
+          showToast('Journal note saved.');
+        });
+
+        bindClick('openEmergencyBtn', () => showToast('Emergency card opened.'));
+      }
+
+      window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>
