@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Women's Health Hub · MediRoute</title>
+<style>
+:root {
+  --rose:       #F472B6;
+  --rose-light: #FDF2F8;
+  --rose-mid:   #FBCFE8;
+  --rose-dark:  #BE185D;
+  --lavender:   #A78BFA;
+  --lav-light:  #F5F3FF;
+  --lav-mid:    #DDD6FE;
+  --peach:      #FDBA74;
+  --peach-light:#FFF7ED;
+  --mint:       #6EE7B7;
+  --mint-light: #ECFDF5;
+  --sky:        #93C5FD;
+  --sky-light:  #EFF6FF;
+  --coral:      #FB7185;
+  --cream:      #FFFBF9;
+  --surface:    #FFFFFF;
+  --bg:         #FDF8FC;
+  --border:     #F3E8F3;
+  --text:       #1E0A2E;
+  --text-2:     #6B4F7A;
+  --text-3:     #B89EC4;
+  --nav-h:      72px;
+  --radius:     20px;
+  --radius-sm:  12px;
+  --shadow:     0 2px 16px rgba(167,139,250,0.08);
+  --shadow-md:  0 4px 32px rgba(167,139,250,0.14);
+  --shadow-lg:  0 8px 48px rgba(244,114,182,0.18);
+  --font:       'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --transition: 0.22s cubic-bezier(0.4,0,0.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
+input,textarea{font-family:inherit;}
+ul{list-style:none;}
+
+/* ── LAYOUT ── */
+#app{max-width:430px;margin:0 auto;min-height:100vh;position:relative;background:var(--bg);box-shadow:0 0 60px rgba(167,139,250,0.15);}
+.screen{display:none;padding:0 0 calc(var(--nav-h)+16px);min-height:100vh;animation:fadeUp .28s ease;}
+.screen.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── TOP BAR ── */
+.topbar{padding:52px 20px 14px;background:var(--surface);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);}
+.topbar-row{display:flex;align-items:center;justify-content:space-between;}
+.topbar h1{font-size:1.25rem;font-weight:800;letter-spacing:-0.3px;background:linear-gradient(135deg,var(--rose-dark),var(--lavender));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.topbar .sub{font-size:0.72rem;color:var(--text-3);margin-top:2px;}
+.icon-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--rose-light);color:var(--rose-dark);transition:var(--transition);}
+.icon-btn:hover{background:var(--rose-dark);color:#fff;transform:scale(1.05);}
+.icon-btn svg{width:18px;height:18px;}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:0.82rem;font-weight:700;color:var(--rose-dark);background:var(--rose-light);padding:7px 14px;border-radius:20px;transition:var(--transition);}
+.back-btn svg{width:16px;height:16px;}
+.back-btn:hover{background:var(--rose-dark);color:#fff;}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:var(--nav-h);background:rgba(255,255,255,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;z-index:200;padding:0 2px 10px;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;padding:8px 2px 0;cursor:pointer;transition:var(--transition);position:relative;}
+.nav-item svg{width:20px;height:20px;color:var(--text-3);transition:var(--transition);}
+.nav-item span{font-size:0.58rem;font-weight:600;color:var(--text-3);transition:var(--transition);}
+.nav-item.active svg{color:var(--rose-dark);}
+.nav-item.active span{color:var(--rose-dark);}
+.nav-item.emora-nav svg{color:var(--lavender);}
+.nav-item.emora-nav span{color:var(--lavender);}
+.nav-item.emora-nav.active svg{color:var(--rose-dark);}
+.nav-item.emora-nav.active span{color:var(--rose-dark);}
+
+/* ── CARDS / MISC ── */
+.card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:0.68rem;font-weight:700;}
+.pill.rose{background:var(--rose-mid);color:var(--rose-dark);}
+.pill.lav{background:var(--lav-mid);color:#5B21B6;}
+.pill.mint{background:var(--mint-light);color:#065F46;}
+.pill.peach{background:var(--peach-light);color:#92400E;}
+.pill.sky{background:var(--sky-light);color:#1E40AF;}
+.section-label{font-size:0.68rem;font-weight:800;letter-spacing:0.08em;color:var(--text-3);text-transform:uppercase;margin-bottom:10px;}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.section-header h2{font-size:1rem;font-weight:800;color:var(--text);}
+.see-all{font-size:0.75rem;color:var(--rose-dark);font-weight:700;}
+.progress-bar{height:6px;background:var(--border);border-radius:10px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:10px;transition:width 1s cubic-bezier(0.4,0,0.2,1);}
+.toast{position:fixed;bottom:calc(var(--nav-h)+16px);left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:#fff;padding:11px 20px;border-radius:20px;font-size:0.8rem;font-weight:600;z-index:600;transition:transform .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;max-width:90vw;text-align:center;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.separator{height:8px;background:var(--bg);}
+
+/* ════════════════════════════
+   SCREEN: EMORA MAIN
+════════════════════════════ */
+
+/* Hero */
+.emora-hero{background:linear-gradient(150deg,#FDF2F8 0%,#F5F3FF 50%,#EFF6FF 100%);padding:52px 20px 28px;position:relative;overflow:hidden;}
+.emora-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(244,114,182,0.15),transparent 70%);}
+.emora-hero::after{content:'';position:absolute;bottom:-40px;left:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(167,139,250,0.12),transparent 70%);}
+.hero-eyebrow{font-size:0.68rem;font-weight:800;letter-spacing:0.12em;color:var(--rose-dark);text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.hero-eyebrow::before{content:'';width:20px;height:2px;background:var(--rose-dark);border-radius:2px;}
+.emora-hero h1{font-size:2rem;font-weight:900;letter-spacing:-0.8px;line-height:1.1;margin-bottom:6px;background:linear-gradient(135deg,#BE185D 0%,#7C3AED 60%,#1D4ED8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.emora-hero .hero-sub{font-size:0.82rem;color:var(--text-2);margin-bottom:20px;line-height:1.5;max-width:280px;}
+
+/* AI Avatar Card */
+.ai-avatar-card{background:rgba(255,255,255,0.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1.5px solid rgba(244,114,182,0.2);border-radius:var(--radius);padding:20px;display:flex;gap:16px;align-items:center;box-shadow:0 4px 32px rgba(244,114,182,0.12);}
+.ai-orb{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#FBCFE8,#DDD6FE);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;animation:orbPulse 3s ease-in-out infinite;}
+@keyframes orbPulse{0%,100%{box-shadow:0 0 0 0 rgba(244,114,182,0.3),0 0 0 0 rgba(167,139,250,0.2);}50%{box-shadow:0 0 0 12px rgba(244,114,182,0.1),0 0 0 24px rgba(167,139,250,0.05);}}
+.ai-orb-inner{font-size:2rem;}
+.ai-orb-ring{position:absolute;inset:-5px;border-radius:50%;border:2px dashed rgba(167,139,250,0.4);animation:spinSlow 12s linear infinite;}
+@keyframes spinSlow{to{transform:rotate(360deg);}}
+.ai-card-text h2{font-size:1.1rem;font-weight:800;color:var(--text);margin-bottom:3px;}
+.ai-card-text p{font-size:0.73rem;color:var(--text-2);line-height:1.4;margin-bottom:10px;}
+.chat-btn{background:linear-gradient(135deg,var(--rose-dark),var(--lavender));color:#fff;padding:9px 18px;border-radius:20px;font-size:0.78rem;font-weight:800;display:flex;align-items:center;gap:6px;transition:var(--transition);}
+.chat-btn:active{transform:scale(0.96);}
+.chat-btn svg{width:14px;height:14px;}
+
+/* Quick stats strip */
+.quick-stats{display:flex;gap:10px;padding:20px 20px 4px;overflow-x:auto;scrollbar-width:none;}
+.quick-stats::-webkit-scrollbar{display:none;}
+.qs-card{background:var(--surface);border-radius:var(--radius-sm);padding:14px 16px;min-width:110px;box-shadow:var(--shadow);flex-shrink:0;border-top:3px solid transparent;transition:var(--transition);}
+.qs-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.qs-card .qs-icon{font-size:1.3rem;margin-bottom:6px;}
+.qs-card .qs-val{font-size:1.1rem;font-weight:800;color:var(--text);margin-bottom:2px;}
+.qs-card .qs-lbl{font-size:0.62rem;color:var(--text-3);font-weight:600;}
+.qs-card.rose{border-top-color:var(--rose);}
+.qs-card.lav{border-top-color:var(--lavender);}
+.qs-card.peach{border-top-color:var(--peach);}
+.qs-card.mint{border-top-color:var(--mint);}
+
+/* Cycle Tracker */
+.cycle-section{padding:20px;}
+.cycle-card{background:linear-gradient(135deg,#FDF2F8,#F5F3FF);border:1.5px solid var(--rose-mid);border-radius:var(--radius);padding:18px;margin-bottom:14px;}
+.cycle-card h3{font-size:0.92rem;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.cycle-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.cycle-stat{background:rgba(255,255,255,0.75);border-radius:var(--radius-sm);padding:12px 14px;}
+.cycle-stat .cs-label{font-size:0.62rem;text-transform:uppercase;letter-spacing:.07em;color:var(--text-3);font-weight:700;margin-bottom:4px;}
+.cycle-stat .cs-val{font-size:1rem;font-weight:800;color:var(--text);}
+.cycle-stat .cs-sub{font-size:0.65rem;color:var(--text-3);margin-top:2px;}
+.log-form{background:rgba(255,255,255,0.8);border-radius:var(--radius-sm);padding:14px;}
+.log-form h4{font-size:0.82rem;font-weight:700;margin-bottom:10px;color:var(--text-2);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.form-group label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);display:block;margin-bottom:4px;}
+.form-group input{width:100%;padding:9px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);font-size:0.82rem;outline:none;transition:var(--transition);color:var(--text);}
+.form-group input:focus{border-color:var(--rose);box-shadow:0 0 0 3px var(--rose-light);}
+.save-btn{width:100%;padding:11px;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--rose-dark),var(--lavender));color:#fff;font-size:0.82rem;font-weight:800;transition:var(--transition);}
+.save-btn:active{transform:scale(0.97);}
+.log-history{margin-top:14px;}
+.log-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.8);border-radius:10px;margin-bottom:6px;border-left:3px solid var(--rose);}
+.log-item .li-dates{font-size:0.78rem;font-weight:700;color:var(--text);}
+.log-item .li-dur{font-size:0.68rem;color:var(--text-3);}
+.log-item-actions{display:flex;gap:6px;}
+.li-btn{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;transition:var(--transition);}
+.li-btn.edit{background:var(--lav-mid);color:#5B21B6;}
+.li-btn.del{background:var(--rose-mid);color:var(--rose-dark);}
+.li-btn:active{transform:scale(0.9);}
+
+/* Calendar */
+.calendar-section{padding:0 20px 20px;}
+.cal-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.cal-header{padding:16px 18px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+.cal-header h3{font-size:0.95rem;font-weight:800;color:var(--text);}
+.cal-nav{display:flex;gap:6px;}
+.cal-nav-btn{width:32px;height:32px;border-radius:50%;background:var(--rose-light);color:var(--rose-dark);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;transition:var(--transition);}
+.cal-nav-btn:hover{background:var(--rose-dark);color:#fff;}
+.cal-legend{display:flex;flex-wrap:wrap;gap:8px;padding:10px 18px;border-bottom:1px solid var(--border);}
+.cal-legend-item{display:flex;align-items:center;gap:5px;font-size:0.62rem;font-weight:600;color:var(--text-2);}
+.leg-dot{width:10px;height:10px;border-radius:50%;}
+.cal-days-header{display:grid;grid-template-columns:repeat(7,1fr);padding:8px 10px 4px;}
+.cal-dow{text-align:center;font-size:0.62rem;font-weight:700;color:var(--text-3);text-transform:uppercase;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:4px 10px 14px;}
+.cal-day{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:600;border-radius:50%;cursor:pointer;transition:var(--transition);position:relative;}
+.cal-day:hover{background:var(--rose-light);}
+.cal-day.today{background:var(--text);color:#fff;font-weight:800;}
+.cal-day.period{background:var(--rose-mid);color:var(--rose-dark);font-weight:800;}
+.cal-day.predicted{background:rgba(251,207,232,0.5);color:var(--rose-dark);}
+.cal-day.fertile{background:var(--mint-light);color:#065F46;}
+.cal-day.ovulation{background:var(--lavender);color:#fff;font-weight:800;}
+.cal-day.other-month{color:var(--text-3);}
+
+/* Alerts */
+.alerts-section{padding:0 20px 20px;}
+.alert-card{border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;border-left:4px solid transparent;transition:var(--transition);}
+.alert-card:hover{transform:translateX(3px);}
+.alert-card.rose{background:linear-gradient(135deg,#FDF2F8,#FFF);border-left-color:var(--rose);}
+.alert-card.lav{background:linear-gradient(135deg,#F5F3FF,#FFF);border-left-color:var(--lavender);}
+.alert-card.mint{background:linear-gradient(135deg,#ECFDF5,#FFF);border-left-color:var(--mint);}
+.alert-card.peach{background:linear-gradient(135deg,#FFF7ED,#FFF);border-left-color:var(--peach);}
+.alert-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.alert-info h4{font-size:0.85rem;font-weight:800;margin-bottom:2px;}
+.alert-info p{font-size:0.72rem;color:var(--text-2);}
+.alert-badge{margin-left:auto;flex-shrink:0;}
+
+/* Chat Section */
+.chat-section{padding:0 20px 20px;}
+.chat-container{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.chat-header{background:linear-gradient(135deg,var(--rose-dark),var(--lavender));padding:14px 18px;display:flex;align-items:center;gap:12px;}
+.chat-header .ch-avatar{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.chat-header h4{font-size:0.88rem;font-weight:800;color:#fff;}
+.chat-header p{font-size:0.68rem;color:rgba(255,255,255,0.75);}
+.chat-status{display:flex;align-items:center;gap:4px;}
+.chat-status-dot{width:7px;height:7px;border-radius:50%;background:#6EE7B7;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.chat-messages{height:260px;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.chat-messages::-webkit-scrollbar{width:4px;}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+.msg{max-width:78%;display:flex;flex-direction:column;gap:3px;}
+.msg.user{align-self:flex-end;align-items:flex-end;}
+.msg.bot{align-self:flex-start;align-items:flex-start;}
+.msg-bubble{padding:10px 14px;border-radius:18px;font-size:0.78rem;line-height:1.5;}
+.msg.user .msg-bubble{background:linear-gradient(135deg,var(--rose-dark),var(--lavender));color:#fff;border-bottom-right-radius:4px;}
+.msg.bot .msg-bubble{background:var(--rose-light);color:var(--text);border-bottom-left-radius:4px;}
+.msg-time{font-size:0.6rem;color:var(--text-3);}
+.chat-suggestions{display:flex;gap:6px;padding:8px 14px;overflow-x:auto;scrollbar-width:none;border-top:1px solid var(--border);}
+.chat-suggestions::-webkit-scrollbar{display:none;}
+.sug-btn{flex-shrink:0;padding:6px 12px;border-radius:20px;background:var(--rose-light);color:var(--rose-dark);font-size:0.7rem;font-weight:700;white-space:nowrap;transition:var(--transition);border:1.5px solid var(--rose-mid);}
+.sug-btn:hover{background:var(--rose-dark);color:#fff;border-color:var(--rose-dark);}
+.chat-input-row{display:flex;gap:8px;padding:10px 14px 14px;border-top:1px solid var(--border);}
+.chat-input{flex:1;padding:10px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg);font-size:0.82rem;outline:none;transition:var(--transition);color:var(--text);}
+.chat-input:focus{border-color:var(--rose);box-shadow:0 0 0 3px var(--rose-light);}
+.send-btn{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--rose-dark),var(--lavender));color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:var(--transition);}
+.send-btn:active{transform:scale(0.92);}
+.send-btn svg{width:16px;height:16px;}
+.typing-indicator{display:flex;gap:4px;padding:10px 14px;align-items:center;}
+.typing-indicator span{width:7px;height:7px;border-radius:50%;background:var(--rose);animation:typingDot .9s infinite;}
+.typing-indicator span:nth-child(2){animation-delay:.15s;}
+.typing-indicator span:nth-child(3){animation-delay:.3s;}
+@keyframes typingDot{0%,80%,100%{transform:scale(0.6);opacity:.4;}40%{transform:scale(1);opacity:1;}}
+
+/* Wellness */
+.wellness-section{padding:0 20px 20px;}
+.wellness-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.wellness-card{background:var(--surface);border-radius:var(--radius-sm);padding:16px;box-shadow:var(--shadow);transition:var(--transition);}
+.wellness-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.wc-icon{font-size:1.5rem;margin-bottom:8px;}
+.wc-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:.07em;color:var(--text-3);font-weight:700;margin-bottom:4px;}
+.wc-val{font-size:1.2rem;font-weight:800;color:var(--text);margin-bottom:6px;}
+.wc-sub{font-size:0.65rem;color:var(--text-3);margin-bottom:8px;}
+.wc-bar{height:5px;background:var(--border);border-radius:10px;overflow:hidden;}
+.wc-fill{height:100%;border-radius:10px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+.mood-row{display:flex;gap:6px;margin-top:8px;}
+.mood-btn{width:30px;height:30px;border-radius:50%;font-size:1rem;display:flex;align-items:center;justify-content:center;background:var(--bg);border:2px solid var(--border);transition:var(--transition);cursor:pointer;}
+.mood-btn.active,.mood-btn:hover{border-color:var(--rose);transform:scale(1.15);}
+
+/* Devices */
+.devices-section{padding:0 20px 20px;}
+.device-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.device-header{background:linear-gradient(135deg,#F5F3FF,#EFF6FF);padding:16px 18px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+.device-header h3{font-size:0.92rem;font-weight:800;}
+.device-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:4px 4px;}
+.device-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;cursor:pointer;transition:var(--transition);border-radius:var(--radius-sm);margin:4px;}
+.device-item:hover{background:var(--rose-light);}
+.device-icon{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;}
+.device-item h4{font-size:0.72rem;font-weight:700;text-align:center;}
+.device-item .d-status{font-size:0.62rem;color:var(--text-3);}
+.connect-btn{margin:0 14px 14px;width:calc(100% - 28px);padding:12px;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--rose-dark),var(--lavender));color:#fff;font-size:0.82rem;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;transition:var(--transition);}
+.connect-btn:active{transform:scale(0.97);}
+.connect-btn svg{width:16px;height:16px;}
+
+/* Family monitoring */
+.family-section{padding:0 20px 20px;}
+.family-mon-card{background:var(--surface);border-radius:var(--radius-sm);box-shadow:var(--shadow);margin-bottom:10px;padding:14px 16px;display:flex;gap:12px;align-items:center;transition:var(--transition);}
+.family-mon-card:hover{transform:translateX(3px);box-shadow:var(--shadow-md);}
+.fm-avatar{width:46px;height:46px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+.fm-info{flex:1;}
+.fm-info h4{font-size:0.85rem;font-weight:800;margin-bottom:2px;}
+.fm-info p{font-size:0.68rem;color:var(--text-3);}
+.fm-info .fm-updated{font-size:0.62rem;color:var(--text-3);margin-top:2px;}
+.view-btn{padding:7px 14px;border-radius:20px;background:var(--rose-light);color:var(--rose-dark);font-size:0.7rem;font-weight:800;transition:var(--transition);flex-shrink:0;}
+.view-btn:active{background:var(--rose-dark);color:#fff;}
+
+/* Education */
+.edu-section{padding:0 20px 20px;}
+.edu-scroll{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;}
+.edu-scroll::-webkit-scrollbar{display:none;}
+.edu-card{min-width:160px;border-radius:var(--radius-sm);padding:16px;flex-shrink:0;transition:var(--transition);cursor:pointer;}
+.edu-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.edu-card .edu-icon{font-size:1.8rem;margin-bottom:10px;}
+.edu-card h4{font-size:0.8rem;font-weight:800;margin-bottom:4px;}
+.edu-card p{font-size:0.65rem;line-height:1.4;opacity:0.8;}
+.edu-card.rose{background:linear-gradient(135deg,#FDF2F8,#FCE7F3);}
+.edu-card.lav{background:linear-gradient(135deg,#F5F3FF,#EDE9FE);}
+.edu-card.mint{background:linear-gradient(135deg,#ECFDF5,#D1FAE5);}
+.edu-card.peach{background:linear-gradient(135deg,#FFF7ED,#FED7AA);}
+.edu-card.sky{background:linear-gradient(135deg,#EFF6FF,#DBEAFE);}
+
+/* Emergency */
+.emergency-section{padding:0 20px 20px;}
+.emrg-card{border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:10px;display:flex;gap:12px;align-items:center;transition:var(--transition);}
+.emrg-card:hover{transform:translateX(3px);}
+.emrg-card.rose{background:var(--rose-light);border:1.5px solid var(--rose-mid);}
+.emrg-card.lav{background:var(--lav-light);border:1.5px solid var(--lav-mid);}
+.emrg-card.mint{background:var(--mint-light);border:1.5px solid rgba(110,231,183,.3);}
+.emrg-c-icon{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+.emrg-c-info{flex:1;}
+.emrg-c-info h4{font-size:0.85rem;font-weight:800;margin-bottom:2px;}
+.emrg-c-info p{font-size:0.7rem;color:var(--text-2);}
+.call-btn{padding:8px 14px;border-radius:20px;font-size:0.72rem;font-weight:800;transition:var(--transition);flex-shrink:0;}
+.call-btn.rose{background:var(--rose-dark);color:#fff;}
+.call-btn.lav{background:var(--lavender);color:#fff;}
+.call-btn.mint{background:#059669;color:#fff;}
+.call-btn:active{transform:scale(0.94);}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ═══════════════════════════════
+     SCREEN: WOMEN'S HEALTH HUB
+═══════════════════════════════ -->
+<div class="screen active" id="screen-health-hub">
+
+  <!-- Top Bar -->
+  <div style="padding:52px 20px 14px;background:var(--surface);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <button class="back-btn" onclick="window.history.back()" title="Back">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="icon-btn" onclick="navigate('devices')" style="background:linear-gradient(135deg,var(--lav-light),var(--mint-light));color:var(--lavender);" title="Connected Devices">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+        </button>
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--mint);animation:blink 2s infinite;"></div>
+        <span style="font-size:0.68rem;color:var(--text-3);font-weight:600;">Priya Kumar</span>
+        <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--rose-mid),var(--lav-mid));display:flex;align-items:center;justify-content:center;font-size:1.1rem;">👩</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="emora-hero">
+    <div class="hero-eyebrow">Women's Health Hub</div>
+    <h1>Women's Personalized Health Care</h1>
+    <p class="hero-sub">Your personal health companion — cycles, wellness, and care, all in one place.</p>
+    <div class="ai-avatar-card">
+      <div class="ai-orb">
+        <div class="ai-orb-inner">🌸</div>
+        <div class="ai-orb-ring"></div>
+      </div>
+      <div class="ai-card-text">
+        <h2>Hello, Priya! 💜</h2>
+        <p>You're on Day 14 of your cycle. Fertility window is active. How are you feeling today?</p>
+        <button class="chat-btn" onclick="scrollToSection('chat-section')">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Get Support
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="quick-stats">
+    <div class="qs-card rose">
+      <div class="qs-icon">🩸</div>
+      <div class="qs-val">Day 14</div>
+      <div class="qs-lbl">Cycle Day</div>
+    </div>
+    <div class="qs-card lav">
+      <div class="qs-icon">🌙</div>
+      <div class="qs-val">28 days</div>
+      <div class="qs-lbl">Avg. Cycle</div>
+    </div>
+    <div class="qs-card mint">
+      <div class="qs-icon">🥚</div>
+      <div class="qs-val">Today</div>
+      <div class="qs-lbl">Ovulation</div>
+    </div>
+    <div class="qs-card peach">
+      <div class="qs-icon">📅</div>
+      <div class="qs-val">Jun 26</div>
+      <div class="qs-lbl">Next Period</div>
+    </div>
+  </div>
+
+  <div class="separator" style="margin-top:12px;"></div>
+
+  <!-- ── Cycle Tracker ── -->
+  <div class="cycle-section">
+    <div class="section-header" style="margin-bottom:14px;">
+      <h2>Menstrual Cycle Tracker</h2>
+      <span class="see-all" onclick="showToast('Full history view coming soon')">History</span>
+    </div>
+    <div class="cycle-card">
+      <h3>🩸 Cycle Overview</h3>
+      <div class="cycle-grid">
+        <div class="cycle-stat">
+          <div class="cs-label">Last Period</div>
+          <div class="cs-val">May 27</div>
+          <div class="cs-sub">Started · 5 days</div>
+        </div>
+        <div class="cycle-stat">
+          <div class="cs-label">Avg. Length</div>
+          <div class="cs-val">28 days</div>
+          <div class="cs-sub">Based on 6 cycles</div>
+        </div>
+        <div class="cycle-stat">
+          <div class="cs-label">Next Predicted</div>
+          <div class="cs-val" id="nextPeriodVal">Jun 26</div>
+          <div class="cs-sub" id="nextPeriodDays">in 16 days</div>
+        </div>
+        <div class="cycle-stat">
+          <div class="cs-label">Cycle Status</div>
+          <div class="cs-val" style="color:var(--mint);font-size:.85rem;">🟢 Regular</div>
+          <div class="cs-sub">On track</div>
+        </div>
+      </div>
+
+      <!-- Log Form -->
+      <div class="log-form">
+        <h4>📝 Log New Period</h4>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Start Date</label>
+            <input type="date" id="periodStart" value="2025-05-27">
+          </div>
+          <div class="form-group">
+            <label>End Date</label>
+            <input type="date" id="periodEnd" value="2025-05-31">
+          </div>
+        </div>
+        <button class="save-btn" onclick="savePeriodLog()">Save Period Log</button>
+      </div>
+
+      <!-- History -->
+      <div class="log-history" id="logHistory">
+        <div style="font-size:0.72rem;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;">Previous Logs</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- ── Monthly Calendar ── -->
+  <div class="calendar-section">
+    <div class="section-header" style="margin-bottom:14px;">
+      <h2>Monthly Calendar</h2>
+    </div>
+    <div class="cal-card">
+      <div class="cal-header">
+        <h3 id="calMonthLabel">June 2025</h3>
+        <div class="cal-nav">
+          <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+          <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+        </div>
+      </div>
+      <div class="cal-legend">
+        <div class="cal-legend-item"><div class="leg-dot" style="background:var(--rose-mid);"></div>Period</div>
+        <div class="cal-legend-item"><div class="leg-dot" style="background:rgba(251,207,232,.5);"></div>Predicted</div>
+        <div class="cal-legend-item"><div class="leg-dot" style="background:var(--mint-light);border:1px solid var(--mint);"></div>Fertile</div>
+        <div class="cal-legend-item"><div class="leg-dot" style="background:var(--lavender);"></div>Ovulation</div>
+      </div>
+      <div class="cal-days-header">
+        <div class="cal-dow">Su</div><div class="cal-dow">Mo</div><div class="cal-dow">Tu</div>
+        <div class="cal-dow">We</div><div class="cal-dow">Th</div><div class="cal-dow">Fr</div><div class="cal-dow">Sa</div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- ── Upcoming Alerts ── -->
+  <div class="alerts-section">
+    <div class="section-header" style="margin-bottom:14px;">
+      <h2>Upcoming Alerts</h2>
+      <span class="pill rose">4 Active</span>
+    </div>
+    <div class="alert-card rose">
+      <div class="alert-icon" style="background:var(--rose-mid);">🩸</div>
+      <div class="alert-info">
+        <h4>Next Period in 16 Days</h4>
+        <p>Expected Jun 26 — stock up on supplies</p>
+      </div>
+      <div class="alert-badge"><span class="pill rose">Jun 26</span></div>
+    </div>
+    <div class="alert-card lav">
+      <div class="alert-icon" style="background:var(--lav-mid);">🥚</div>
+      <div class="alert-info">
+        <h4>Ovulation Window Active</h4>
+        <p>Peak fertility today and tomorrow, Jun 12–13</p>
+      </div>
+      <div class="alert-badge"><span class="pill lav">Now</span></div>
+    </div>
+    <div class="alert-card mint">
+      <div class="alert-icon" style="background:var(--mint-light);">💊</div>
+      <div class="alert-info">
+        <h4>Folic Acid Reminder</h4>
+        <p>Take 400mcg daily — recommended for your cycle phase</p>
+      </div>
+      <div class="alert-badge"><span class="pill mint">Daily</span></div>
+    </div>
+    <div class="alert-card peach">
+      <div class="alert-icon" style="background:var(--peach-light);">🩺</div>
+      <div class="alert-info">
+        <h4>Annual Gynec Check-up</h4>
+        <p>Dr. Anitha Rao — appointment due this month</p>
+      </div>
+      <div class="alert-badge"><span class="pill peach">Due</span></div>
+    </div>
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- ── Health Support Chat ── -->
+  <div class="chat-section" id="chat-section">
+    <div class="section-header" style="margin-bottom:14px;">
+      <h2>Health Support</h2>
+      <div class="chat-status">
+        <div class="chat-status-dot"></div>
+        <span style="font-size:0.7rem;color:var(--text-3);font-weight:600;">Online</span>
+      </div>
+    </div>
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="ch-avatar">🌸</div>
+        <div>
+          <h4>Health Support</h4>
+          <p>Women's Care Companion · Always here</p>
+        </div>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg bot">
+          <div class="msg-bubble">Hi Priya! 💜 Welcome to your personalized health care hub. You're currently on Day 14 — your fertile window. Ask me anything about your cycle, symptoms, or wellness!</div>
+          <span class="msg-time">Just now</span>
+        </div>
+      </div>
+      <div class="chat-suggestions">
+        <button class="sug-btn" onclick="askEmora('What is a menstrual cycle?')">What is a menstrual cycle?</button>
+        <button class="sug-btn" onclick="askEmora('Why is my cycle irregular?')">Irregular cycles?</button>
+        <button class="sug-btn" onclick="askEmora('What is ovulation?')">What is ovulation?</button>
+        <button class="sug-btn" onclick="askEmora('Normal period symptoms?')">Normal symptoms?</button>
+        <button class="sug-btn" onclick="askEmora('How to track my cycle?')">How to track cycle?</button>
+        <button class="sug-btn" onclick="askEmora('What is PCOS?')">What is PCOS?</button>
+      </div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chatInput" type="text" placeholder="Ask anything…" onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="send-btn" onclick="sendChat()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- ── Wellness Insights ── -->
+  <div class="wellness-section">
+    <div class="section-header" style="margin-bottom:14px;">
+      <h2>Wellness Insights</h2>
+      <span class="see-all">Today</span>
+    </div>
+    <div class="wellness-grid">
+      <div class="wellness-card">
+        <div class="wc-icon">📅</div>
+        <div class="wc-label">Cycle Day</div>
+        <div class="wc-val" style="color:var(--rose-dark);">Day 14</div>
+        <div class="wc-sub">Ovulation phase</div>
+        <div class="wc-bar"><div class="wc-fill" style="width:50%;background:linear-gradient(90deg,var(--rose),var(--lavender));"></div></div>
+      </div>
+      <div class="wellness-card">
+        <div class="wc-icon">😊</div>
+        <div class="wc-label">Mood Today</div>
+        <div class="wc-val" style="font-size:1rem;">How are you?</div>
+        <div class="wc-sub">Tap to log mood</div>
+        <div class="mood-row">
+          <div class="mood-btn" onclick="selectMood(this,'😄')" title="Great">😄</div>
+          <div class="mood-btn active" onclick="selectMood(this,'🙂')" title="Good">🙂</div>
+          <div class="mood-btn" onclick="selectMood(this,'😐')" title="Okay">😐</div>
+          <div class="mood-btn" onclick="selectMood(this,'😔')" title="Low">😔</div>
+          <div class="mood-btn" onclick="selectMood(this,'😣')" title="Pain">😣</div>
+        </div>
+      </div>
+      <div class="wellness-card">
+        <div class="wc-icon">💧</div>
+        <div class="wc-label">Water Intake</div>
+        <div class="wc-val" style="color:#3B82F6;">1.4 / 2L</div>
+        <div class="wc-sub">600ml remaining</div>
+        <div class="wc-bar"><div class="wc-fill" style="width:70%;background:linear-gradient(90deg,#93C5FD,#3B82F6);"></div></div>
+      </div>
+      <div class="wellness-card">
+        <div class="wc-icon">🌙</div>
+        <div class="wc-label">Sleep Last Night</div>
+        <div class="wc-val" style="color:var(--lavender);">6.8 hrs</div>
+        <div class="wc-sub">Goal: 8 hours</div>
+        <div class="wc-bar"><div class="wc-fill" style="width:85%;background:linear-gradient(90deg,var(--lav-mid),var(--lavender));"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- ── Connected Devices ── -->
+  <div class="devices-section">
+    <div class="section-header" style="margin-bottom:14px;">
+      <h2>Connected Devices</h2>
+    </div>
+    <div class="device-card">
+      <div class="device-header">
+        <h3>Health Devices</h3>
+        <span class="pill mint">2 Connected</span>
+      </div>
+      <div class="device-grid">
+        <div class="device-item" onclick="showToast('Apple Watch synced — last update 2 min ago')">
+          <div class="device-icon" style="background:linear-gradient(135deg,#1C1C1E,#3A3A3C);">⌚</div>
+          <h4>Apple Watch</h4>
+          <div class="d-status" style="color:var(--mint);font-weight:700;">● Connected</div>
+        </div>
+        <div class="device-item" onclick="showToast('Mi Band synced — heart rate: 72 bpm')">
+          <div class="device-icon" style="background:linear-gradient(135deg,#FF6B35,#F7931E);">📿</div>
+          <h4>Mi Health Band</h4>
+          <div class="d-status" style="color:var(--mint);font-weight:700;">● Connected</div>
+        </div>
+        <div class="device-item" onclick="showToast('Fitbit not connected — tap to pair')">
+          <div class="device-icon" style="background:linear-gradient(135deg,#00B5AD,#009E94);">🏃</div>
+          <h4>Fitbit Tracker</h4>
+          <div class="d-status">○ Not paired</div>
+        </div>
+        <div class="device-item" onclick="showToast('Samsung watch not connected — tap to pair')">
+          <div class="device-icon" style="background:linear-gradient(135deg,#1428A0,#2660C6);">🔵</div>
+          <h4>Samsung Watch</h4>
+          <div class="d-status">○ Not paired</div>
+        </div>
+      </div>
+      <button class="connect-btn" onclick="showToast('Opening device pairing…')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Connect New Device
+      </button>
+    </div>
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- ── Family Monitoring ── -->
+  <div class="family-section">
+    <div class="section-header" style="margin-bottom:14px;">
+      <h2>Family Members</h2>
+      <span class="pill lav">4 Monitored</span>
+    </div>
+    <div class="family-mon-card">
+      <div class="fm-avatar" style="background:#FCE7F3;">👩‍🦳</div>
+      <div class="fm-info">
+        <h4>Kamala Devi · Grandmother</h4>
+        <span class="pill rose" style="font-size:.6rem;padding:2px 8px;">Needs Care</span>
+        <div class="fm-updated">Updated 3h ago · BP: 148/92</div>
+      </div>
+      <button class="view-btn" onclick="showToast('Opening Kamala\'s profile…')">View</button>
+    </div>
+    <div class="family-mon-card">
+      <div class="fm-avatar" style="background:#F5F3FF;">👩</div>
+      <div class="fm-info">
+        <h4>Priya Kumar · Self</h4>
+        <span class="pill mint" style="font-size:.6rem;padding:2px 8px;">Active</span>
+        <div class="fm-updated">Updated now · Cycle Day 14</div>
+      </div>
+      <button class="view-btn" onclick="showToast('That\'s you, Priya!')">You</button>
+    </div>
+    <div class="family-mon-card">
+      <div class="fm-avatar" style="background:#DCFCE7;">👧</div>
+      <div class="fm-info">
+        <h4>Ananya Kumar · Daughter</h4>
+        <span class="pill sky" style="font-size:.6rem;padding:2px 8px;">Healthy</span>
+        <div class="fm-updated">Updated 1d ago · Age 12</div>
+      </div>
+      <button class="view-btn" onclick="showToast('Opening Ananya\'s profile…')">View</button>
+    </div>
+    <div class="family-mon-card">
+      <div class="fm-avatar" style="background:#FEF3C7;">👩‍🦱</div>
+      <div class="fm-info">
+        <h4>Rekha Sharma · Sister</h4>
+        <span class="pill mint" style="font-size:.6rem;padding:2px 8px;">Healthy</span>
+        <div class="fm-updated">Updated 2d ago · Cycle Day 8</div>
+      </div>
+      <button class="view-btn" onclick="showToast('Opening Rekha\'s profile…')">View</button>
+    </div>
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- ── Women's Health Education ── -->
+  <div class="edu-section">
+    <div class="section-header" style="margin-bottom:14px;">
+      <h2>Women's Health Library</h2>
+      <span class="see-all">All Topics</span>
+    </div>
+    <div class="edu-scroll">
+      <div class="edu-card rose" onclick="showToast('Opening Menstrual Health guide…')">
+        <div class="edu-icon">🩸</div>
+        <h4>Menstrual Health</h4>
+        <p>Understand your cycle, phases, and what's normal</p>
+      </div>
+      <div class="edu-card lav" onclick="showToast('Opening PCOS Awareness guide…')">
+        <div class="edu-icon">🔬</div>
+        <h4>PCOS Awareness</h4>
+        <p>Symptoms, diagnosis, and management strategies</p>
+      </div>
+      <div class="edu-card mint" onclick="showToast('Opening Pregnancy Care guide…')">
+        <div class="edu-icon">🤰</div>
+        <h4>Pregnancy Care</h4>
+        <p>Trimester guidance and prenatal nutrition tips</p>
+      </div>
+      <div class="edu-card peach" onclick="showToast('Opening Nutrition guide…')">
+        <div class="edu-icon">🥗</div>
+        <h4>Nutrition</h4>
+        <p>Cycle-synced eating and iron-rich foods</p>
+      </div>
+      <div class="edu-card sky" onclick="showToast('Opening Mental Wellness guide…')">
+        <div class="edu-icon">🧠</div>
+        <h4>Mental Wellness</h4>
+        <p>PMS mood management and stress reduction</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- ── Emergency Support ── -->
+  <div class="emergency-section">
+    <div class="section-header" style="margin-bottom:14px;">
+      <h2>Emergency Support</h2>
+    </div>
+    <div class="emrg-card rose">
+      <div class="emrg-c-icon" style="background:var(--rose-mid);">🚨</div>
+      <div class="emrg-c-info">
+        <h4>Emergency Services</h4>
+        <p>National Emergency Helpline · 112</p>
+      </div>
+      <button class="call-btn rose" onclick="showToast('Calling 112…')">Call 112</button>
+    </div>
+    <div class="emrg-card lav">
+      <div class="emrg-c-icon" style="background:var(--lav-mid);">👨‍👩‍👧</div>
+      <div class="emrg-c-info">
+        <h4>Rajesh Kumar · Husband</h4>
+        <p>+91 98765 43210 · Primary contact</p>
+      </div>
+      <button class="call-btn lav" onclick="showToast('Calling Rajesh…')">Call</button>
+    </div>
+    <div class="emrg-card mint">
+      <div class="emrg-c-icon" style="background:var(--mint-light);">🩺</div>
+      <div class="emrg-c-info">
+        <h4>Dr. Anitha Rao</h4>
+        <p>Gynecologist · +91 22 4567 8901</p>
+      </div>
+      <button class="call-btn mint" onclick="showToast('Calling Dr. Anitha Rao…')">Call</button>
+    </div>
+    <div style="background:linear-gradient(135deg,#FDF2F8,#F5F3FF);border-radius:var(--radius-sm);padding:14px 16px;border:1.5px solid var(--rose-mid);text-align:center;margin-top:4px;">
+      <div style="font-size:1.2rem;margin-bottom:6px;">📞</div>
+      <div style="font-size:0.78rem;font-weight:800;color:var(--text);margin-bottom:2px;">Women's Helpline · 181</div>
+      <div style="font-size:0.68rem;color:var(--text-3);margin-bottom:10px;">24×7 · Free · Confidential support</div>
+      <button style="background:linear-gradient(135deg,var(--rose-dark),var(--lavender));color:#fff;padding:9px 24px;border-radius:20px;font-size:0.78rem;font-weight:800;" onclick="showToast('Calling Women\'s Helpline 181…')">Call 181</button>
+    </div>
+  </div>
+
+  <div style="height:8px;"></div>
+</div><!-- /screen-health-hub -->
+
+<!-- ═══════════════════════════════
+     SCREEN: HOME
+═══════════════════════════════ -->
+<div class="screen" id="screen-home">
+  <div style="padding:52px 20px 14px;background:var(--surface);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <h1 style="font-size:1.25rem;font-weight:800;color:var(--text);">Dashboard</h1>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="icon-btn" onclick="navigate('devices')" style="background:linear-gradient(135deg,var(--lav-light),var(--mint-light));color:var(--lavender);" title="Connected Devices">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+        </button>
+        <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--rose-mid),var(--lav-mid));display:flex;align-items:center;justify-content:center;font-size:1.1rem;">👩</div>
+      </div>
+    </div>
+  </div>
+  <div style="padding:20px;text-align:center;color:var(--text-2);">
+    <div id="dashboard-root">
+      <div style="text-align:left;max-width:420px;margin:8px auto 14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div>
+            <div style="font-size:1rem;font-weight:900;color:var(--text);">👩 Welcome to your Women's Health Dashboard</div>
+            <div style="font-size:0.78rem;color:var(--text-3);">View your wellness metrics, cycle tracking, and health summary all in one place.</div>
+          </div>
+          <div style="text-align:right;">
+            <label style="font-size:0.7rem;color:var(--text-3);display:block;margin-bottom:6px;">Voice Alerts</label>
+            <div style="display:flex;gap:8px;align-items:center;justify-content:flex-end;">
+              <input type="checkbox" id="dash-voice-toggle" />
+              <button class="icon-btn" id="voice-test" title="Test voice" onclick="speak('This is a voice alert test from Emora')">🔊</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+          <div class="card" style="padding:12px;">
+            <div style="font-weight:800;font-size:0.9rem;">Cycle Summary</div>
+            <div id="dash-cycle-day" style="font-size:1.1rem;font-weight:900;margin-top:6px;color:var(--rose-dark);">Day 14</div>
+            <div id="dash-next-period" style="font-size:0.78rem;color:var(--text-3);margin-top:6px;">Next: Jun 26 · in 16 days</div>
+          </div>
+          <div class="card" style="padding:12px;">
+            <div style="font-weight:800;font-size:0.9rem;">Quick Health</div>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <div style="flex:1;text-align:center;"><div style="font-size:1rem;">💓</div><div id="dash-hr" style="font-weight:800;">72 bpm</div><div style="font-size:0.7rem;color:var(--text-3);">Heart Rate</div></div>
+              <div style="flex:1;text-align:center;"><div style="font-size:1rem;">🫀</div><div id="dash-bp" style="font-weight:800;">120/78</div><div style="font-size:0.7rem;color:var(--text-3);">BP</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+          <div class="card wellness-card" style="padding:12px;">
+            <div class="wc-label">Mood</div>
+            <div class="wc-val" id="dash-mood">🙂 Good</div>
+            <div class="wc-sub">Tap any mood in Wellness to update</div>
+          </div>
+          <div class="card wellness-card" style="padding:12px;">
+            <div class="wc-label">Hydration</div>
+            <div class="wc-val" id="dash-water">1.4 / 2 L</div>
+            <div class="wc-sub">Daily target</div>
+            <div class="wc-bar" style="margin-top:8px;"><div id="dash-water-fill" class="wc-fill" style="width:70%;background:linear-gradient(90deg,#93C5FD,#3B82F6);"></div></div>
+          </div>
+        </div>
+
+        <div id="dash-alerts"></div>
+      </div>
+    </div>
+  </div>
+</div><!-- /screen-home -->
+
+<!-- ═══════════════════════════════
+     SCREEN: FAMILY
+═══════════════════════════════ -->
+<div class="screen" id="screen-family">
+  <div style="padding:52px 20px 14px;background:var(--surface);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);">
+    <h1 style="font-size:1.25rem;font-weight:800;color:var(--text);">Family Profiles</h1>
+  </div>
+  <div style="padding:20px;text-align:center;color:var(--text-2);">
+    <p style="margin:40px 0;">Manage & Monitor Your Family's Health</p>
+    <div class="card" style="padding:24px;margin:20px 0;box-shadow:var(--shadow);">
+      <div style="font-size:2.5rem;margin-bottom:12px;">👨‍👩‍👧‍👦</div>
+      <h3 style="font-size:1rem;font-weight:800;margin-bottom:8px;color:var(--text);">Family Members</h3>
+      <p style="font-size:0.85rem;line-height:1.6;">Add and manage health profiles for your family members. Track their appointments, medications, and health history.</p>
+    </div>
+      <div id="family-list" style="padding:0 20px 24px;"></div>
+  </div>
+</div><!-- /screen-family -->
+
+<!-- ═══════════════════════════════
+     SCREEN: MEDICINES
+═══════════════════════════════ -->
+<div class="screen" id="screen-medicines">
+  <div style="padding:52px 20px 14px;background:var(--surface);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);">
+    <h1 style="font-size:1.25rem;font-weight:800;color:var(--text);">Medications & Supplements</h1>
+  </div>
+  <div style="padding:20px;text-align:center;color:var(--text-2);">
+    <p style="margin:40px 0;">Track Your Medicines & Supplements</p>
+    <div class="card" style="padding:24px;margin:20px 0;box-shadow:var(--shadow);">
+      <div style="font-size:2.5rem;margin-bottom:12px;">💊</div>
+      <h3 style="font-size:1rem;font-weight:800;margin-bottom:8px;color:var(--text);">Medication Tracker</h3>
+      <p style="font-size:0.85rem;line-height:1.6;">Set reminders for your daily medications, vitamins, and supplements. Track doses taken and manage refills.</p>
+    </div>
+    <ul id="med-list" class="med-list" style="margin:12px 20px 24px;padding:0;list-style:none;"></ul>
+  </div>
+</div><!-- /screen-medicines -->
+
+<!-- ═══════════════════════════════
+     SCREEN: RECORDS
+═══════════════════════════════ -->
+<div class="screen" id="screen-records">
+  <div style="padding:52px 20px 14px;background:var(--surface);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);">
+    <h1 style="font-size:1.25rem;font-weight:800;color:var(--text);">Health Records</h1>
+  </div>
+  <div style="padding:20px;text-align:center;color:var(--text-2);">
+    <p style="margin:40px 0;">Your Medical & Health Records</p>
+    <div class="card" style="padding:24px;margin:20px 0;box-shadow:var(--shadow);">
+      <div style="font-size:2.5rem;margin-bottom:12px;">📋</div>
+      <h3 style="font-size:1rem;font-weight:800;margin-bottom:8px;color:var(--text);">Medical History</h3>
+      <p style="font-size:0.85rem;line-height:1.6;">Store and manage your health records, lab results, prescriptions, and medical documents securely.</p>
+    </div>
+    <div id="records-list" style="padding:0 20px 24px;"></div>
+  </div>
+</div><!-- /screen-records -->
+
+<!-- ═══════════════════════════════
+     SCREEN: PROFILE
+═══════════════════════════════ -->
+<div class="screen" id="screen-profile">
+  <div style="padding:52px 20px 14px;background:var(--surface);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);">
+    <h1 style="font-size:1.25rem;font-weight:800;color:var(--text);">My Profile</h1>
+  </div>
+ 
+      <div id="profile-area" style="padding:0 20px 24px;"></div>
+  </div>
+</div><!-- /screen-profile -->
+
+<!-- ═══════════════════════════════
+     SCREEN: DEVICES
+═══════════════════════════════ -->
+<div class="screen" id="screen-devices">
+  <div style="padding:52px 20px 14px;background:var(--surface);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button onclick="navigate('health-hub')" class="back-btn" style="border:none;background:none;padding:0;">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <h1 style="font-size:1.25rem;font-weight:800;color:var(--text);">Connected Devices</h1>
+    </div>
+  </div>
+  <div style="padding:20px;text-align:center;color:var(--text-2);">
+    <p style="margin:40px 0;">Sync Your Wearable Devices</p>
+    <div class="card" style="padding:24px;margin:20px 0;box-shadow:var(--shadow);">
+      <div style="font-size:2.5rem;margin-bottom:12px;">⌚</div>
+      <h3 style="font-size:1rem;font-weight:800;margin-bottom:8px;color:var(--text);">Wearable Integration</h3>
+      <p style="font-size:0.85rem;line-height:1.6;">Connect your fitness trackers, smartwatches, and health devices to sync real-time health data.</p>
+    </div>
+  </div>
+</div><!-- /screen-devices -->
+
+<!-- ═══════════════════════════════
+     BOTTOM NAVIGATION
+═══════════════════════════════ -->
+<nav class="bottom-nav">
+  <div class="nav-item" data-screen="home" onclick="navigate('home')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Home</span>
+  </div>
+  <div class="nav-item" data-screen="family" onclick="navigate('family')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <span>Family</span>
+  </div>
+  <div class="nav-item" data-screen="medicines" onclick="navigate('medicines')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M10.5 20H4a2 2 0 01-2-2V5c0-1.1.9-2 2-2h3.93a2 2 0 011.66.9l.82 1.2a2 2 0 001.66.9H20a2 2 0 012 2v3"/><circle cx="18" cy="18" r="3"/><path d="M18 15v6M15 18h6"/></svg>
+    <span>Medicines</span>
+  </div>
+  <div class="nav-item" data-screen="records" onclick="navigate('records')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    <span>Records</span>
+  </div>
+  <div class="nav-item active" data-screen="health-hub" onclick="navigate('health-hub')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <span>Health</span>
+  </div>
+  <div class="nav-item" data-screen="profile" onclick="navigate('profile')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>Profile</span>
+  </div>
+</nav>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+</div><!-- /app -->
+
+<script>
+// ── SCREEN NAVIGATION ──
+const screenMap = {
+  'home': 'screen-home',
+  'family': 'screen-family',
+  'medicines': 'screen-medicines',
+  'records': 'screen-records',
+  'health-hub': 'screen-health-hub',
+  'profile': 'screen-profile',
+  'devices': 'screen-devices'
+};
+
+function navigate(screenKey) {
+  // Hide all screens
+  document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+  // Show target screen
+  const screenId = screenMap[screenKey];
+  const screen = document.getElementById(screenId);
+  if (screen) {
+    screen.classList.add('active');
+    window.scrollTo(0, 0);
+    // refresh dynamic content when showing specific screens
+    if (screenKey === 'family') renderFamilyScreen();
+    if (screenKey === 'medicines') renderMedicinesScreen();
+    if (screenKey === 'records') renderRecordsScreen();
+    if (screenKey === 'profile') {
+      if (selectedMemberId) renderProfileScreen(); else renderAccountSettings();
+    }
+    if (screenKey === 'home') renderHomeDashboard();
+  }
+  // Update nav items
+  document.querySelectorAll('.nav-item[data-screen]').forEach(item => {
+    item.classList.toggle('active', item.dataset.screen === screenKey);
+  });
+}
+
+// ── TOAST ──
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── SCROLL TO SECTION ──
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+}
+
+// ── PERIOD LOG STORAGE ──
+let periodLogs = [
+  { start: '2025-05-27', end: '2025-05-31', id: 1 },
+  { start: '2025-04-29', end: '2025-05-03', id: 2 },
+  { start: '2025-04-01', end: '2025-04-05', id: 3 },
+];
+let editingId = null;
+
+function formatDate(str) {
+  const d = new Date(str + 'T00:00:00');
+  return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: '2-digit' });
+}
+
+function daysDiff(a, b) {
+  return Math.round((new Date(b) - new Date(a)) / 86400000);
+}
+
+function durationDays(start, end) {
+  return daysDiff(start, end) + 1;
+}
+
+function calcNextPeriod() {
+  if (periodLogs.length < 2) return null;
+  const sorted = [...periodLogs].sort((a, b) => new Date(b.start) - new Date(a.start));
+  let gaps = [];
+  for (let i = 0; i < sorted.length - 1; i++) {
+    gaps.push(daysDiff(sorted[i+1].start, sorted[i].start));
+  }
+  const avg = Math.round(gaps.reduce((s, v) => s + v, 0) / gaps.length);
+  const lastStart = new Date(sorted[0].start + 'T00:00:00');
+  const next = new Date(lastStart);
+  next.setDate(next.getDate() + avg);
+  return { date: next, avgCycle: avg };
+}
+
+function renderLogs() {
+  const container = document.getElementById('logHistory');
+  const sorted = [...periodLogs].sort((a, b) => new Date(b.start) - new Date(a.start));
+  let html = '<div style="font-size:0.72rem;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;">Previous Logs</div>';
+  sorted.forEach(log => {
+    html += `<div class="log-item">
+      <div>
+        <div class="li-dates">${formatDate(log.start)} → ${formatDate(log.end)}</div>
+        <div class="li-dur">${durationDays(log.start, log.end)} days</div>
+      </div>
+      <div class="log-item-actions">
+        <button class="li-btn edit" onclick="editLog(${log.id})" title="Edit">✏️</button>
+        <button class="li-btn del" onclick="deleteLog(${log.id})" title="Delete">🗑</button>
+      </div>
+    </div>`;
+  });
+  container.innerHTML = html;
+
+  // Update predictions
+  const pred = calcNextPeriod();
+  if (pred) {
+    document.getElementById('nextPeriodVal').textContent = pred.date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+    const today = new Date(); today.setHours(0,0,0,0);
+    const diff = Math.round((pred.date - today) / 86400000);
+    document.getElementById('nextPeriodDays').textContent = diff > 0 ? `in ${diff} days` : diff === 0 ? 'Today' : `${Math.abs(diff)}d ago`;
+  }
+}
+
+function savePeriodLog() {
+  const start = document.getElementById('periodStart').value;
+  const end = document.getElementById('periodEnd').value;
+  if (!start || !end) { showToast('Please select start and end dates'); return; }
+  if (new Date(end) < new Date(start)) { showToast('End date must be after start date'); return; }
+
+  if (editingId !== null) {
+    const idx = periodLogs.findIndex(l => l.id === editingId);
+    if (idx !== -1) periodLogs[idx] = { start, end, id: editingId };
+    editingId = null;
+    document.querySelector('.save-btn').textContent = 'Save Period Log';
+    showToast('Period log updated ✓');
+  } else {
+    periodLogs.push({ start, end, id: Date.now() });
+    showToast('Period log saved ✓');
+  }
+  renderLogs();
+  buildCalendar();
+}
+
+function editLog(id) {
+  const log = periodLogs.find(l => l.id === id);
+  if (!log) return;
+  document.getElementById('periodStart').value = log.start;
+  document.getElementById('periodEnd').value = log.end;
+  editingId = id;
+  document.querySelector('.save-btn').textContent = 'Update Period Log';
+  document.querySelector('.log-form').scrollIntoView({ behavior: 'smooth' });
+  showToast('Edit mode — update dates and save');
+}
+
+function deleteLog(id) {
+  if (!confirm('Delete this period log?')) return;
+  periodLogs = periodLogs.filter(l => l.id !== id);
+  renderLogs();
+  buildCalendar();
+  showToast('Log deleted');
+}
+
+// ── CALENDAR ──
+let calYear = 2025, calMonth = 5; // June (0-indexed)
+
+function buildCalendar() {
+  const grid = document.getElementById('calGrid');
+  const label = document.getElementById('calMonthLabel');
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  label.textContent = `${months[calMonth]} ${calYear}`;
+
+  // Calculate period days and prediction
+  const periodDays = new Set();
+  periodLogs.forEach(log => {
+    let d = new Date(log.start + 'T00:00:00');
+    const end = new Date(log.end + 'T00:00:00');
+    while (d <= end) {
+      if (d.getFullYear() === calYear && d.getMonth() === calMonth)
+        periodDays.add(d.getDate());
+      d.setDate(d.getDate() + 1);
+    }
+  });
+
+  // Predicted period (next cycle)
+  const pred = calcNextPeriod();
+  const predDays = new Set();
+  const ovulationDays = new Set();
+  const fertileDays = new Set();
+  if (pred) {
+    for (let i = 0; i < 5; i++) {
+      const d = new Date(pred.date); d.setDate(d.getDate() + i);
+      if (d.getFullYear() === calYear && d.getMonth() === calMonth) predDays.add(d.getDate());
+    }
+    // Ovulation ~14 days before next period
+    const ov = new Date(pred.date); ov.setDate(ov.getDate() - 14);
+    if (ov.getFullYear() === calYear && ov.getMonth() === calMonth) ovulationDays.add(ov.getDate());
+    // Fertile window: 5 days before ovulation + ovulation day
+    for (let i = -5; i <= 1; i++) {
+      const fd = new Date(ov); fd.setDate(fd.getDate() + i);
+      if (fd.getFullYear() === calYear && fd.getMonth() === calMonth) {
+        if (!ovulationDays.has(fd.getDate())) fertileDays.add(fd.getDate());
+      }
+    }
+  }
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const today = new Date();
+  const isCurrentMonth = today.getFullYear() === calYear && today.getMonth() === calMonth;
+
+  let html = '';
+  // Empty cells before first day
+  for (let i = 0; i < firstDay; i++) html += '<div class="cal-day other-month"></div>';
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    let cls = 'cal-day';
+    if (isCurrentMonth && day === today.getDate()) cls += ' today';
+    else if (ovulationDays.has(day)) cls += ' ovulation';
+    else if (fertileDays.has(day)) cls += ' fertile';
+    else if (periodDays.has(day)) cls += ' period';
+    else if (predDays.has(day)) cls += ' predicted';
+    html += `<div class="${cls}" onclick="showToast('Jun ${day} — ${getDayLabel(day, periodDays, predDays, fertileDays, ovulationDays, isCurrentMonth && day===today.getDate())}')">${day}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function getDayLabel(day, pd, pred, fertile, ov, isToday) {
+  if (isToday) return 'Today';
+  if (ov.has(day)) return 'Ovulation Day';
+  if (fertile.has(day)) return 'Fertile Window';
+  if (pd.has(day)) return 'Period Day';
+  if (pred.has(day)) return 'Predicted Period';
+  return 'No event';
+}
+
+function changeMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  buildCalendar();
+}
+
+// ===== Caregiver data sync =====
+let careFamily = [];
+let careRecords = [];
+let selectedMemberId = null;
+
+function loadCaregiverData() {
+  // In-memory fallback sample data (used only when localStorage is empty)
+  const fallbackFamily = [
+    {
+      id: 'rajesh', name: 'Rajesh Sharma', relation: 'Father', age: '52', blood: 'B+', badges: ['Diabetic T2','Hypertension'],
+      allergies: 'Penicillin, Sulfa drugs', emergency: '+91 98765 43210', notes: 'Track BP and sugar',
+      prescriptions: ['Metformin 500mg', 'Amlodipine 5mg', 'Aspirin 75mg'], voiceAlerts: true, avatar: '👨'
+    },
+    {
+      id: 'priya', name: 'Priya Sharma', relation: 'Mother', age: '48', blood: 'O+', badges: ['Thyroid'],
+      allergies: '', emergency: '+91 91234 56789', notes: '',
+      prescriptions: ['Thyrox 50mcg'], voiceAlerts: false, avatar: '👩'
+    },
+    {
+      id: 'ananya', name: 'Ananya Sharma', relation: 'Daughter', age: '12', blood: 'A+', badges: [],
+      allergies: '', emergency: '', notes: '', prescriptions: [], avatar: '👧'
+    }
+  ];
+
+  const fallbackRecords = [
+    { id: 'rec-1', fileName: 'HbA1c_Report.pdf', uploadedAt: '2025-05-15', type: 'application/pdf', size: 23456, dataUrl: '#' },
+    { id: 'rec-2', fileName: 'Chest_Xray.jpg', uploadedAt: '2024-11-02', type: 'image/jpeg', size: 124578, dataUrl: '#' }
+  ];
+
+  try {
+    const raw = localStorage.getItem('mdei_family_members');
+    const parsed = raw ? JSON.parse(raw) : null;
+    careFamily = Array.isArray(parsed) && parsed.length ? parsed : fallbackFamily;
+  } catch (e) { careFamily = fallbackFamily; console.warn('Failed to load family from storage', e); }
+
+  try {
+    const r = localStorage.getItem('mdei_uploaded_records');
+    const parsedR = r ? JSON.parse(r) : null;
+    careRecords = Array.isArray(parsedR) && parsedR.length ? parsedR : fallbackRecords;
+  } catch (e) { careRecords = fallbackRecords; console.warn('Failed to load records from storage', e); }
+}
+
+function renderFamilyScreen() {
+  const el = document.getElementById('family-list');
+  if (!el) return;
+  if (!careFamily || careFamily.length === 0) {
+    el.innerHTML = '<div style="color:var(--text-2);padding:12px;">No family profiles found. Add profiles in the caregiver app.</div>';
+    return;
+  }
+  el.innerHTML = careFamily.map(m => {
+    const meds = (m.prescriptions || []).slice(0,3).map(rx => typeof rx === 'string' ? rx : rx.name).join(', ');
+    return `<div class="family-mon-card">
+      <div class="fm-avatar">${m.avatar || '👤'}</div>
+      <div class="fm-info">
+        <h4>${m.name} <span style="font-size:12px;color:var(--text-3);font-weight:600">· ${m.relation || ''}</span></h4>
+        <p>${m.age || ''} yrs · ${m.blood || ''} · ${m.badges ? m.badges.join(', ') : ''}</p>
+        <div class="fm-updated">${meds ? 'Meds: ' + meds : 'No active meds'}</div>
+      </div>
+      <button class="view-btn" onclick="selectMember('${m.id}')">View</button>
+    </div>`;
+  }).join('');
+}
+
+function renderMedicinesScreen() {
+  const ul = document.getElementById('med-list');
+  if (!ul) return;
+  const meds = [];
+  (careFamily || []).forEach(m => {
+    (m.prescriptions || []).forEach(rx => meds.push({ name: typeof rx === 'string' ? rx : rx.name, owner: m.name }));
+  });
+  if (!meds.length) { ul.innerHTML = '<li style="color:var(--text-2);padding:8px;">No medicines found in caregiver profiles.</li>'; return; }
+  ul.innerHTML = meds.map(item => `<li style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed var(--border);"><span>💊 ${item.name}</span><button class="view-btn" onclick="showToast('Logged ${item.name}')">Log</button></li>`).join('');
+}
+
+function renderRecordsScreen() {
+  const container = document.getElementById('records-list');
+  if (!container) return;
+  if (!careRecords || careRecords.length === 0) { container.innerHTML = '<div style="color:var(--text-2);padding:12px;">No uploaded records found.</div>'; return; }
+  container.innerHTML = careRecords.map(r => `
+    <div class="card" style="padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-weight:800;">${r.fileName || 'Record'}</div>
+          <div style="font-size:12px;color:var(--text-3);">${r.uploadedAt || ''} · ${r.type || ''}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <button class="view-btn" onclick="window.open('${r.dataUrl || '#'}','_blank')">View</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderProfileScreen() {
+  const area = document.getElementById('profile-area');
+  if (!area) return;
+  // try to show selected member or find a member named 'Priya' or fallback to first
+  let member = null;
+  if (selectedMemberId) member = (careFamily || []).find(m => m.id === selectedMemberId);
+  if (!member) member = (careFamily || []).find(m => m.name && m.name.toLowerCase().includes('priya')) || (careFamily || [])[0] || null;
+  if (!member) {
+    area.innerHTML = '<div style="color:var(--text-2);">No profile available. Connect with caregiver app.</div>';
+    return;
+  }
+  // Editable profile form similar to caregiver settings
+  area.innerHTML = `
+    <div class="card" style="padding:14px;">
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px;">
+        <div style="width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--rose-mid),var(--lav-mid));display:flex;align-items:center;justify-content:center;font-size:1.5rem;" id="profile-avatar">${member.avatar||'👤'}</div>
+        <div style="flex:1;">
+          <input id="profile-name" placeholder="Name" style="width:100%;font-weight:900;font-size:1rem;border:none;background:transparent;outline:none;" value="${member.name || ''}" />
+          <div style="font-size:12px;color:var(--text-3);">${member.relation || ''} · ${member.age || ''} yrs</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+        <input id="profile-relation" placeholder="Relation" value="${member.relation || ''}" />
+        <input id="profile-age" placeholder="Age" type="number" min="0" value="${member.age || ''}" />
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+        <input id="profile-blood" placeholder="Blood group" value="${member.blood || ''}" />
+        <input id="profile-emergency" placeholder="Emergency contact" value="${member.emergency || ''}" />
+      </div>
+      <div style="margin-bottom:8px;"><label style="display:block;font-size:12px;color:var(--text-3);margin-bottom:6px;">Allergies (comma separated)</label><input id="profile-allergies" placeholder="e.g. Penicillin" value="${member.allergies || ''}" /></div>
+      <div style="margin-bottom:8px;"><label style="display:block;font-size:12px;color:var(--text-3);margin-bottom:6px;">Notes</label><textarea id="profile-notes" style="width:100%;min-height:80px;border-radius:10px;padding:8px;border:1px solid var(--border);">${member.notes || ''}</textarea></div>
+      <div style="margin-bottom:8px;"><label style="display:block;font-size:12px;color:var(--text-3);margin-bottom:6px;">Prescriptions (one per line)</label><textarea id="profile-prescriptions" style="width:100%;min-height:80px;border-radius:10px;padding:8px;border:1px solid var(--border);">${(member.prescriptions || []).map(rx=> typeof rx==='string'? rx : rx.name).join('\n')}</textarea></div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;"><label style="font-size:13px;color:var(--text-3);">Voice alerts</label><input type="checkbox" id="profile-voice" ${member.voiceAlerts ? 'checked' : ''} /></div>
+      <div style="display:flex;gap:10px;">
+        <button class="save-btn" onclick="saveProfileEdits('${member.id}')">Save</button>
+        <button class="view-btn" onclick="deleteProfile('${member.id}')" style="background:var(--rose-mid);">Delete</button>
+      </div>
+    </div>
+  `;
+}
+
+function saveProfileEdits(id) {
+  const idx = careFamily.findIndex(m => m.id === id);
+  const name = document.getElementById('profile-name').value.trim();
+  const relation = document.getElementById('profile-relation').value.trim();
+  const age = document.getElementById('profile-age').value.trim();
+  const blood = document.getElementById('profile-blood').value.trim();
+  const emergency = document.getElementById('profile-emergency').value.trim();
+  const allergies = document.getElementById('profile-allergies').value.trim();
+  const notes = document.getElementById('profile-notes').value.trim();
+  const prescriptions = document.getElementById('profile-prescriptions').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const voiceAlerts = !!document.getElementById('profile-voice').checked;
+
+  if (!name) { showToast('Name is required'); return; }
+
+  const updated = { id, name, relation, age, blood, emergency, allergies, notes, prescriptions, voiceAlerts, avatar: (careFamily[idx] && careFamily[idx].avatar) || '👤' };
+  if (idx === -1) {
+    careFamily.push(updated);
+  } else {
+    careFamily[idx] = { ...careFamily[idx], ...updated };
+  }
+  try { localStorage.setItem('mdei_family_members', JSON.stringify(careFamily)); } catch (e) { console.warn('Failed to save family', e); }
+  showToast('Profile saved');
+  selectedMemberId = id;
+  renderFamilyScreen();
+  renderProfileScreen();
+}
+
+function deleteProfile(id) {
+  if (!confirm('Delete this profile?')) return;
+  careFamily = careFamily.filter(m => m.id !== id);
+  try { localStorage.setItem('mdei_family_members', JSON.stringify(careFamily)); } catch (e) { console.warn('Failed to save family', e); }
+  selectedMemberId = null;
+  showToast('Profile deleted');
+  renderFamilyScreen();
+  renderProfileScreen();
+}
+
+function selectMember(id) {
+  selectedMemberId = id;
+  renderProfileScreen();
+  navigate('profile');
+}
+
+// ── ACCOUNT / PROFILE SETTINGS (Women POV) ──
+function loadAccountSettings() {
+  try {
+    const raw = localStorage.getItem('women_profile_settings');
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) { return null; }
+}
+
+function saveAccountSettings(obj) {
+  try { localStorage.setItem('women_profile_settings', JSON.stringify(obj)); showToast('Settings saved'); } catch (e) { console.warn(e); }
+}
+
+function renderAccountSettings() {
+  const area = document.getElementById('profile-area');
+  if (!area) return;
+  const settings = loadAccountSettings() || {};
+  const me = (careFamily||[]).find(m=>m.name && m.name.toLowerCase().includes('priya')) || (careFamily||[])[0] || {};
+  const membersCount = (careFamily || []).length;
+  const prescriptionsCount = (careFamily || []).reduce((s,m)=> s + ((m.prescriptions||[]).length), 0);
+  const adherence = settings.adherence || 87;
+  const healthScore = settings.healthScore || 82;
+
+  area.innerHTML = `
+    <div style="max-width:420px;margin:6px auto;">
+      <div class="card" style="padding:18px;margin-bottom:12px;display:flex;gap:12px;align-items:center;">
+        <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--rose-mid),var(--lav-mid));display:flex;align-items:center;justify-content:center;font-size:2rem;">${me.avatar || '👩'}</div>
+        <div style="flex:1;">
+          <div style="font-weight:900;font-size:1.05rem;">${settings.name || me.name || 'Priya Kumar'}</div>
+          <div style="font-size:0.78rem;color:var(--text-3);">${settings.email || settings.phone || me.emergency || '+91 91234 56789'}</div>
+        </div>
+        <button class="icon-btn" onclick="editAccountHeader()">✏️</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;">
+        <div class="card" style="padding:12px;text-align:center;"><div style="font-weight:900">${membersCount}</div><div style="font-size:0.68rem;color:var(--text-3);">Members</div></div>
+        <div class="card" style="padding:12px;text-align:center;"><div style="font-weight:900">${prescriptionsCount}</div><div style="font-size:0.68rem;color:var(--text-3);">Prescriptions</div></div>
+        <div class="card" style="padding:12px;text-align:center;"><div style="font-weight:900">${adherence}%</div><div style="font-size:0.68rem;color:var(--text-3);">Adherence</div></div>
+        <div class="card" style="padding:12px;text-align:center;"><div style="font-weight:900">${healthScore}</div><div style="font-size:0.68rem;color:var(--text-3);">Health Score</div></div>
+      </div>
+
+      <div class="card" style="padding:12px;margin-bottom:12px;">
+        <div style="font-weight:800;margin-bottom:8px;">Family Settings</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:var(--bg);"><div><strong>Manage Family</strong><div style="font-size:12px;color:var(--text-3);">${membersCount} members</div></div><button class="view-btn" onclick="navigate('family')">Open</button></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:var(--bg);"><div><strong>Share Access</strong><div style="font-size:12px;color:var(--text-3);">Invite family members</div></div><button class="view-btn" onclick="showToast('Share access coming soon')">Invite</button></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:var(--bg);"><div><strong>Caregiver Alerts</strong><div style="font-size:12px;color:var(--text-3);">Get notified for missed meds</div></div><button class="view-btn" onclick="showToast('Caregiver alerts settings')">Manage</button></div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:12px;margin-bottom:12px;">
+        <div style="font-weight:800;margin-bottom:8px;">Notification Settings</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          ${renderToggleRow('medicineReminders','Medicine Reminders','30 min before dose', settings.medicineReminders)}
+          ${renderToggleRow('appointmentAlerts','Appointment Alerts','1 day & 1 hour before', settings.appointmentAlerts)}
+          ${renderToggleRow('healthTips','Health Tips','Daily wellness nudges', settings.healthTips)}
+          ${renderToggleRow('emergencyAlerts','Emergency Alerts','SOS and critical updates', settings.emergencyAlerts)}
+        </div>
+      </div>
+
+      <div class="card" style="padding:12px;margin-bottom:20px;">
+        <div style="font-weight:800;margin-bottom:8px;">Emergency Settings</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:var(--bg);"><div><strong>Emergency Profile</strong><div style="font-size:12px;color:var(--text-3);">Update QR info · Last: Today</div></div><button class="view-btn" onclick="showToast('Open Emergency Profile')">Open</button></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // attach toggle handlers
+  ['medicineReminders','appointmentAlerts','healthTips','emergencyAlerts'].forEach(k=>{
+    const el = document.getElementById('toggle-'+k);
+    if (el) el.onchange = (e)=>{ const s = loadAccountSettings() || {}; s[k] = !!e.target.checked; saveAccountSettings(s); };
+  });
+}
+
+function renderToggleRow(key,title,subtitle,value){
+  const checked = value ? 'checked' : '';
+  return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:var(--bg);"><div><strong>${title}</strong><div style="font-size:12px;color:var(--text-3);">${subtitle}</div></div><label style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="toggle-${key}" ${checked} /><span style="font-size:0.8rem;color:var(--text-3);">`+`</span></label></div>`;
+}
+
+function editAccountHeader(){
+  const settings = loadAccountSettings() || {};
+  const name = prompt('Name', settings.name || 'Priya Kumar');
+  if (name === null) return;
+  const email = prompt('Email', settings.email || 'priya.kumar@example.com');
+  if (email === null) return;
+  const phone = prompt('Phone', settings.phone || '+91 91234 56789');
+  if (phone === null) return;
+  settings.name = name; settings.email = email; settings.phone = phone;
+  saveAccountSettings(settings);
+  renderAccountSettings();
+}
+
+
+// ── MOOD ──
+function selectMood(el, emoji) {
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  const moods = { '😄': 'Great', '🙂': 'Good', '😐': 'Okay', '😔': 'Low', '😣': 'In pain' };
+  const label = moods[emoji] || emoji;
+  showToast(`Mood logged: ${label}`);
+  try { localStorage.setItem('mdei_last_mood', JSON.stringify({ emoji, label, at: new Date().toISOString() })); } catch (e) { }
+  // update dashboard and evaluate alerts
+  const mEl = document.getElementById('dash-mood'); if (mEl) mEl.textContent = `${emoji} ${label}`;
+  evaluateAlerts();
+}
+
+// ── EMORA AI CHAT ──
+const aiResponses = {
+  'what is a menstrual cycle': `A menstrual cycle is the monthly hormonal process your body goes through in preparation for a possible pregnancy. It typically lasts 21–35 days, with the average being 28 days. 🌸\n\nThe cycle has 4 phases:\n• Menstrual (Days 1–5)\n• Follicular (Days 1–13)\n• Ovulation (Day 14)\n• Luteal (Days 15–28)`,
+  'why is my cycle irregular': `Irregular cycles can have many causes — don't worry, they're very common! 💜\n\nCommon reasons include:\n• Stress and anxiety\n• Hormonal imbalances (like PCOS or thyroid issues)\n• Significant weight changes\n• Intense exercise\n• Medications\n\nIf your cycle varies by more than 7–10 days consistently, I'd suggest consulting Dr. Anitha Rao for a check-up.`,
+  'what is ovulation': `Ovulation is when a mature egg is released from your ovary — typically around Day 14 of a 28-day cycle. 🥚\n\nYou're most fertile during the 5 days before ovulation and the day of ovulation itself. Signs include:\n• Mild pelvic pain\n• Slight rise in body temperature\n• Clear, stretchy discharge\n• Increased energy\n\nYour Emora calendar marks this window for you automatically!`,
+  'normal period symptoms': `Most period symptoms are completely normal! 🌿 Here's what to expect:\n\n✅ Normal:\n• Cramps (dysmenorrhea)\n• Bloating\n• Breast tenderness\n• Mood changes\n• Fatigue\n• Lower back pain\n\n⚠️ See a doctor if you have very heavy bleeding (soaking a pad/tampon every hour), cycles lasting >7 days, or severe debilitating pain.`,
+  'how to track my cycle': `Great question! Here's how to track effectively with Emora: 📅\n\n1. Log your period start date each month\n2. Note the end date\n3. Track symptoms daily\n4. Log your mood and energy\n\nAfter 3+ cycles, Emora AI predicts your next period, ovulation window, and fertile days automatically. The more you log, the smarter your predictions get! 💜`,
+  'what is pcos': `PCOS (Polycystic Ovary Syndrome) affects 1 in 10 women of reproductive age. 🔬\n\nCommon symptoms:\n• Irregular or missed periods\n• Excess facial/body hair\n• Acne and oily skin\n• Weight gain\n• Difficulty conceiving\n\nPCOS is manageable with lifestyle changes, diet, and medication. Emora's library has a full PCOS guide. I'd recommend booking an appointment with Dr. Anitha Rao for a diagnosis if you're concerned. 💜`,
+};
+
+function getAIResponse(msg) {
+  const lower = msg.toLowerCase().trim()
+    .replace('?','').replace('!','').replace('.','');
+  for (const [key, val] of Object.entries(aiResponses)) {
+    if (lower.includes(key.split(' ')[0]) || lower.includes(key.split(' ').slice(-1)[0]) || lower.includes(key)) return val;
+  }
+  return `Thank you for asking, Priya! 💜 That's an important health question.\n\nFor personalised advice on "${msg}", I recommend:\n• Checking the Women's Health Library below\n• Booking a consult with Dr. Anitha Rao\n• Calling the Women's Helpline at 181 for immediate support\n\nRemember — no question is too small when it comes to your health! 🌸`;
+}
+
+function askEmora(question) {
+  document.getElementById('chatInput').value = question;
+  sendChat();
+}
+
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  const messages = document.getElementById('chatMessages');
+  const now = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+
+  // User message
+  messages.innerHTML += `<div class="msg user"><div class="msg-bubble">${msg}</div><span class="msg-time">${now}</span></div>`;
+
+  // Typing indicator
+  const typingId = 'typing_' + Date.now();
+  messages.innerHTML += `<div id="${typingId}" class="msg bot"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
+  messages.scrollTop = messages.scrollHeight;
+
+  // AI response with delay
+  setTimeout(() => {
+    const typing = document.getElementById(typingId);
+    if (typing) typing.remove();
+    const response = getAIResponse(msg);
+    messages.innerHTML += `<div class="msg bot"><div class="msg-bubble">${response.replace(/\n/g,'<br>')}</div><span class="msg-time">${now}</span></div>`;
+    messages.scrollTop = messages.scrollHeight;
+  }, 1400);
+}
+
+// ── PROGRESS ANIMATION ──
+function animateProgress() {
+  document.querySelectorAll('.wc-fill').forEach(bar => {
+    const w = bar.style.width;
+    bar.style.width = '0%';
+    setTimeout(() => { bar.style.width = w; }, 200);
+  });
+}
+
+// ── DASHBOARD: render + alerts + voice ──
+function renderHomeDashboard() {
+  // ensure caregiver data loaded
+  loadCaregiverData();
+  const root = document.getElementById('dashboard-root');
+  if (!root) return;
+  // pick selected member or default
+  const member = (careFamily && careFamily.length) ? ((selectedMemberId && careFamily.find(m=>m.id===selectedMemberId)) || careFamily[0]) : null;
+
+  // Cycle/prediction
+  const pred = calcNextPeriod();
+  const cycleDayEl = document.getElementById('dash-cycle-day');
+  const nextPeriodEl = document.getElementById('dash-next-period');
+  if (cycleDayEl) cycleDayEl.textContent = member && member.cycleDay ? `Day ${member.cycleDay}` : (pred ? `Day 14` : 'Day 14');
+  if (nextPeriodEl && pred) nextPeriodEl.textContent = `Next: ${pred.date.toLocaleDateString('en-IN',{day:'numeric',month:'short'})} · avg ${pred.avgCycle}d`;
+
+  // vitals: try stored vitals else sample
+  let vitals = { hr:72, bp:'120/78' };
+  try { const v = JSON.parse(localStorage.getItem('mdei_last_vitals')); if (v) vitals = v; } catch(e){}
+  const hrEl = document.getElementById('dash-hr'); if (hrEl) hrEl.textContent = `${vitals.hr} bpm`;
+  const bpEl = document.getElementById('dash-bp'); if (bpEl) bpEl.textContent = vitals.bp;
+
+  // mood
+  try { const lastMood = JSON.parse(localStorage.getItem('mdei_last_mood')); if (lastMood) { const mEl = document.getElementById('dash-mood'); if (mEl) mEl.textContent = `${lastMood.emoji} ${lastMood.label}`; } } catch(e){}
+
+  // voice toggle
+  const voiceToggle = document.getElementById('dash-voice-toggle');
+  const voiceEnabled = localStorage.getItem('mdei_voice_enabled') !== 'false';
+  if (voiceToggle) {
+    voiceToggle.checked = !!voiceEnabled;
+    voiceToggle.onchange = (e)=>{ localStorage.setItem('mdei_voice_enabled', e.target.checked ? 'true' : 'false'); showToast(e.target.checked? 'Voice alerts ON':'Voice alerts OFF'); };
+  }
+
+  // initial evaluate alerts
+  evaluateAlerts();
+}
+
+function evaluateAlerts() {
+  const container = document.getElementById('dash-alerts');
+  if (!container) return;
+  container.innerHTML = '';
+  const alerts = [];
+  // mood-based alerts
+  try {
+    const mood = JSON.parse(localStorage.getItem('mdei_last_mood'));
+    if (mood) {
+      if (mood.label === 'Low' || mood.label === 'In pain') {
+        alerts.push({type:'rose', icon:'😔', title:'Low mood detected', text:`We noticed you're feeling ${mood.label}. Consider self-care, rest, or contact support.`});
+      } else if (mood.label === 'Okay') {
+        alerts.push({type:'lav', icon:'🙂', title:'Mood logged', text:'Thanks for logging — keep tracking for patterns.'});
+      }
+    }
+  } catch(e){}
+
+  // upcoming period alert
+  try {
+    const pred = calcNextPeriod();
+    if (pred) {
+      const today = new Date(); today.setHours(0,0,0,0);
+      const diff = Math.round((pred.date - today)/86400000);
+      if (diff <= 3 && diff >= 0) alerts.push({type:'peach', icon:'📅', title:'Period soon', text:`Next period in ${diff} day(s). Stock supplies and plan ahead.`});
+    }
+  } catch(e){}
+
+  // medication reminder example: if any family member has 'Folic' in meds
+  try {
+    const meds = (careFamily || []).flatMap(m => m.prescriptions || []);
+    if (meds.some(rx => String(rx).toLowerCase().includes('folic'))) {
+      alerts.push({type:'mint', icon:'💊', title:'Supplement reminder', text:'Folic acid recommended — take 400mcg today.'});
+    }
+  } catch(e){}
+
+  // render alerts
+  alerts.forEach(a => {
+    const div = document.createElement('div');
+    div.className = `alert-card ${a.type}`;
+    div.innerHTML = `<div class="alert-icon" style="background:transparent;">${a.icon}</div><div class="alert-info"><h4>${a.title}</h4><p>${a.text}</p></div><div class="alert-badge"><span class="pill ${a.type}">Now</span></div>`;
+    container.appendChild(div);
+  });
+
+  // voice readout for critical alerts
+  const voiceEnabled = localStorage.getItem('mdei_voice_enabled') !== 'false';
+  if (voiceEnabled && alerts.length) {
+    const critical = alerts[0];
+    speak(`${critical.title}. ${critical.text}`);
+  }
+}
+
+function speak(text) {
+  try {
+    const enabled = localStorage.getItem('mdei_voice_enabled') !== 'false';
+    if (!enabled) return;
+    if (!('speechSynthesis' in window)) return;
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-GB';
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(u);
+  } catch (e) { console.warn('speak failed', e); }
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+  // load caregiver data saved in localStorage and render
+  loadCaregiverData();
+  renderLogs();
+  buildCalendar();
+  setTimeout(animateProgress, 400);
+  // initial renders for connected screens
+  renderHomeDashboard();
+  renderFamilyScreen();
+  renderMedicinesScreen();
+  renderRecordsScreen();
+  renderProfileScreen();
+});
+
+// Ripple
+document.addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn || btn.classList.contains('mood-btn') || btn.classList.contains('li-btn')) return;
+  const circle = document.createElement('span');
+  const rect = btn.getBoundingClientRect();
+  circle.style.cssText = `position:absolute;border-radius:50%;background:rgba(255,255,255,0.25);transform:scale(0);animation:ripple .5s linear;left:${e.clientX-rect.left-20}px;top:${e.clientY-rect.top-20}px;width:40px;height:40px;pointer-events:none;z-index:10;`;
+  btn.style.position = btn.style.position || 'relative';
+  btn.style.overflow = btn.style.overflow || 'hidden';
+  btn.appendChild(circle);
+  setTimeout(() => circle.remove(), 600);
+});
+const rs = document.createElement('style');
+rs.textContent = '@keyframes ripple{to{transform:scale(5);opacity:0;}}';
+document.head.appendChild(rs);
+</script>
+</body>
+</html>
