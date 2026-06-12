@@ -103,7 +103,7 @@ Families do not need another healthcare app.
 
 # 🏗️ Healthcare Workflow Architecture
 
-![MediRoute Workflow](images/workflow.png)
+![MediRoute Workflow](images/workflow.jpeg)
 
 The entire platform operates through four intelligent healthcare layers.
 
