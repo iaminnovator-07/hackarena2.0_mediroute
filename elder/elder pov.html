@@ -628,8 +628,8 @@
     }
 
     .qr-code {
-      width: 86px;
-      height: 86px;
+      width: 120px;
+      height: 120px;
       border-radius: 20px;
       background: linear-gradient(180deg, #fff 0%, #f8efe8 100%);
       display: grid;
@@ -637,7 +637,31 @@
       color: var(--primary);
       font-size: 0.8rem;
       font-weight: 700;
-      border: 1px solid rgba(217, 95, 73, 0.14);
+      border: 2px solid rgba(217, 95, 73, 0.2);
+      box-shadow: 0 8px 16px rgba(217, 95, 73, 0.12);
+      transition: transform 220ms ease, box-shadow 220ms ease;
+      position: relative;
+    }
+
+    .qr-code:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 24px rgba(217, 95, 73, 0.18);
+    }
+
+    .qr-code::after {
+      content: '📱';
+      position: absolute;
+      bottom: -8px;
+      right: -8px;
+      font-size: 1.4rem;
+      background: #fff;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
     .emergency-list {
@@ -1202,7 +1226,7 @@
               <h2>Emergency Profile</h2>
               <p class="list-sub">Large, easy-to-read emergency details.</p>
             </div>
-            <div class="qr-code">QR CODE</div>
+            <div class="qr-code" id="elderEmergencyQRCode"></div>
           </div>
           <div class="emergency-list">
             <div class="emergency-item"><span>Name</span><span id="emergencyName">Rajesh Kumar</span></div>
@@ -1215,6 +1239,9 @@
             </div>
             <div class="emergency-item"><span>Doctor Contact</span><span id="emergencyDoctor">Dr. Anjali Sharma</span>
             </div>
+          </div>
+          <div style="margin-top: 14px; padding: 10px 12px; border-radius: 16px; background: rgba(111, 175, 145, 0.1); border: 1px solid rgba(111, 175, 145, 0.3); font-size: 0.85rem; color: #2F6D52; text-align: center;">
+            📱 Scan the QR → Get instant emergency contact & health info
           </div>
           <button type="button" class="emergency-button" id="openEmergencyBtn">Open Emergency Card</button>
         </div>
@@ -1278,6 +1305,7 @@
 
     <div class="toast" id="toast"></div>
 
+    <script src="../caregiver/qrcode.js"></script>
     <script>
       const data = {
         medicineAlerts: [
@@ -1376,6 +1404,64 @@
         document.getElementById('emergencyMedicines').textContent = (member.prescriptions || []).map(rx => typeof rx === 'string' ? rx : rx.name).join(', ') || 'None';
         document.getElementById('emergencyContact').textContent = member.emergency || 'Not set';
         document.getElementById('emergencyDoctor').textContent = member.doctor || 'Dr. Anjali Sharma';
+      }
+
+      function getElderEmergencyVCard(member) {
+        const fullName = member?.name || 'Senior Member';
+        const emergencyPhone = (member?.emergency || '+91 98765 43210').replace(/\s+/g, '');
+        const email = member?.email || 'elder@medicare.local';
+        const bloodGroup = member?.blood || 'Unknown';
+        const allergies = member?.allergies || 'None';
+        const diseases = (member?.badges || []).join(', ') || 'N/A';
+        const meds = (member?.prescriptions || []).map(rx => typeof rx === 'string' ? rx : rx.name).join(', ') || 'None';
+        const doctor = member?.doctor || 'Dr. Anjali Sharma';
+        const age = member?.age || member?.ageGroup || 'N/A';
+
+        const healthInfo = `EMERGENCY HEALTH PROFILE\n\n` +
+          `🩸 Blood Group: ${bloodGroup}\n` +
+          `⚠️ Allergies: ${allergies}\n` +
+          `🏥 Conditions: ${diseases}\n` +
+          `💊 Medications: ${meds}\n` +
+          `👨‍⚕️ Doctor: ${doctor}`;
+
+        return [
+          'BEGIN:VCARD',
+          'VERSION:3.0',
+          `FN:${fullName} [EMERGENCY]`,
+          `N:${fullName.split(' ').slice(-1).join(' ')};${fullName.split(' ').slice(0, -1).join(' ')};;;`,
+          'ORG:MediRoute Emergency Care',
+          'TITLE:Emergency Health Card',
+          `TEL;TYPE=VOICE,URGENT:${emergencyPhone}`,
+          `EMAIL:${email}`,
+          `NOTE:${healthInfo}`,
+          'END:VCARD'
+        ].join('\n');
+      }
+
+      function generateElderEmergencyQRCode(member) {
+        const target = document.getElementById('elderEmergencyQRCode');
+        if (!target || typeof QRCode !== 'function') return;
+        target.innerHTML = '';
+        try {
+          const vcard = getElderEmergencyVCard(member);
+          const qr = new QRCode(target, {
+            text: vcard,
+            width: target.clientWidth || 86,
+            height: target.clientHeight || 86,
+            colorDark: '#1f2937',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.H
+          });
+          // Add click-to-copy feedback
+          target.style.cursor = 'pointer';
+          target.title = 'Scan this QR to get instant emergency contact & health info';
+          target.addEventListener('click', () => {
+            showToast('🔍 Scan QR to access emergency profile instantly');
+          });
+        } catch (err) {
+          console.warn('QR generation failed', err);
+          target.textContent = 'QR ERROR';
+        }
       }
 
       function setTopProfileMetrics(member) {
@@ -1755,8 +1841,10 @@
         renderFamilySupport();
         renderProfileInfo();
         setupNavButtons();
-        setTopProfileMetrics(elderProfile || caregiverFamily[0] || null);
-        setEmergencyProfileFromElder(elderProfile || caregiverFamily[0] || null);
+        const profileMember = elderProfile || caregiverFamily[0] || null;
+        setTopProfileMetrics(profileMember);
+        setEmergencyProfileFromElder(profileMember);
+        generateElderEmergencyQRCode(profileMember);
 
         bindClick('recordVoiceBtn', () => {
           showToast('Record Family Voice activated.');
