@@ -351,6 +351,7 @@ Built for healthcare relationships.
 ---
 
 # 🔌 Future Healthcare Infrastructure
+![Database Schema](images/IoT_Integration.jpeg)
 
 Healthcare should not stop when internet connectivity fails.
 
